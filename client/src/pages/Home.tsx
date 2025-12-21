@@ -45,6 +45,38 @@ const Home: React.FC = () => {
         </div>
       </div>
 
+      {/* Reviews Section */}
+      <div className="mb-12">
+        <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Student Reviews</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            { name: "Sarah K.", college: "Tech Institute", rating: 5, comment: "Great faculty and amazing campus life!" },
+            { name: "John D.", college: "Business School", rating: 4, comment: "Excellent business program with good networking." },
+            { name: "Emily R.", college: "Arts College", rating: 5, comment: "Creative environment and supportive teachers." }
+          ].map((review, index) => (
+            <div key={index} className="bg-white rounded-lg shadow-md p-6">
+              <div className="flex items-center mb-3">
+                <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
+                  {review.name[0]}
+                </div>
+                <div className="ml-3">
+                  <p className="font-semibold">{review.name}</p>
+                  <p className="text-sm text-gray-600">{review.college}</p>
+                </div>
+              </div>
+              <div className="flex mb-2">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className={i < review.rating ? "text-yellow-400" : "text-gray-300"}>
+                    ★
+                  </span>
+                ))}
+              </div>
+              <p className="text-gray-700 text-sm">{review.comment}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Quick Info */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
         <div className="bg-white rounded-lg shadow-md p-6 text-center">
