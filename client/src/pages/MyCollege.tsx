@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { getUserAdmissions, submitReview } from '../services/api';
+import { submitReview } from '../services/api';
 
 const MyCollege: React.FC = () => {
   const { user } = useAuth();
