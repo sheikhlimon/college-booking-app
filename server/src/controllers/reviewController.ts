@@ -4,7 +4,7 @@ import Review from '../models/Review';
 export const createReview = async (req: Request, res: Response): Promise<void> => {
   try {
     // Extract review data from request body
-    const { collegeId, userEmail, rating, comment } = req.body;
+    const { collegeId, userName, userEmail, rating, comment } = req.body;
 
     // Validate rating range (1-5)
     if (rating < 1 || rating > 5) {
@@ -15,6 +15,7 @@ export const createReview = async (req: Request, res: Response): Promise<void> =
     // Create and save new review
     const review = new Review({
       collegeId,
+      userName,
       userEmail,
       rating,
       comment

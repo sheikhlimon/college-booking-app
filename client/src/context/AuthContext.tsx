@@ -31,10 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Check if user is logged in on component mount
   useEffect(() => {
-    console.log("AuthProvider: Setting up auth state listener");
-
     const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
-      console.log("Auth state changed:", firebaseUser?.email || "No user");
       setUser(firebaseUser);
     });
 

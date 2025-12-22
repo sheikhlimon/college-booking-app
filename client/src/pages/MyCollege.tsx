@@ -56,6 +56,7 @@ const MyCollege: React.FC = () => {
 
       await submitReview({
         collegeId: data.collegeId,
+        userName: user?.displayName || undefined,
         userEmail: user?.email || '',
         rating: data.rating,
         comment: data.comment

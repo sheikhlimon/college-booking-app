@@ -45,6 +45,7 @@ export interface Review {
     name: string;
     image: string;
   };
+  userName?: string;
   userEmail: string;
   rating: number;
   comment: string;
@@ -133,6 +134,7 @@ export const getUserAdmissions = async (email: string): Promise<Admission[]> => 
 // Review endpoints
 export const submitReview = async (reviewData: {
   collegeId: string;
+  userName?: string;
   userEmail: string;
   rating: number;
   comment: string;

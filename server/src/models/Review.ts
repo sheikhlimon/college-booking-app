@@ -7,6 +7,10 @@ const ReviewSchema = new mongoose.Schema(
       ref: "College",
       required: [true, "College ID is required"],
     },
+    userName: {
+      type: String,
+      trim: true,
+    },
     userEmail: {
       type: String,
       required: [true, "User email is required"],

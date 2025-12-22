@@ -3,6 +3,7 @@ import StarRating from './StarRating';
 
 interface Review {
   _id: string;
+  userName?: string;
   userEmail: string;
   rating: number;
   comment: string;
@@ -32,12 +33,15 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, showCollege = false }) 
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
   };
 
-  const getInitials = (email: string) => {
-    return email.charAt(0).toUpperCase();
+
+  const getDisplayName = (review: Review) => {
+    if (review.userName) return review.userName;
+    return review.userEmail.split('@')[0];
   };
 
-  const getDisplayName = (email: string) => {
-    return email.split('@')[0];
+  const getInitials = (review: Review) => {
+    const name = getDisplayName(review);
+    return name.charAt(0).toUpperCase();
   };
 
   return (
@@ -46,10 +50,10 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, showCollege = false }) 
       <div className="bg-gradient-to-r from-emerald-600 to-teal-700 px-4 py-3 sm:px-6 sm:py-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-white/20 backdrop-blur rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
-            {getInitials(review.userEmail)}
+            {getInitials(review)}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="font-bold text-white text-base sm:text-lg truncate">{getDisplayName(review.userEmail)}</p>
+            <p className="font-bold text-white text-base sm:text-lg truncate">{getDisplayName(review)}</p>
             <p className="text-emerald-100 text-xs sm:text-sm">{formatDate(review.createdAt)}</p>
           </div>
           <div className="flex-shrink-0">
