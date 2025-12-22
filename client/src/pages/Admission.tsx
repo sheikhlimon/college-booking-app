@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getColleges, submitAdmission, type College } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import PrivateRoute from '../components/PrivateRoute';
+import { Calendar, Star, ArrowLeft } from 'lucide-react';
 
 const Admission: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -92,7 +93,7 @@ const Admission: React.FC = () => {
 
   return (
     <PrivateRoute>
-      <div className="max-w-4xl mx-auto p-6">
+      <div className="max-w-4xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">College Admission</h1>
 
         {error && (
@@ -123,25 +124,36 @@ const Admission: React.FC = () => {
                   <div
                     key={college._id}
                     onClick={() => handleCollegeSelect(college)}
-                    className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-300"
+                    className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-300 group"
                   >
-                    <div className="h-32 bg-gray-200 flex items-center justify-center">
+                    <div className="h-40 bg-gray-200 flex items-center justify-center overflow-hidden">
                       {college.image ? (
                         <img
                           src={college.image}
                           alt={college.name}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       ) : (
                         <span className="text-gray-500">{college.name}</span>
                       )}
                     </div>
-                    <div className="p-4">
-                      <h3 className="text-lg font-semibold mb-2">{college.name}</h3>
-                      <p className="text-gray-600 mb-2">Admission: {college.admissionDate}</p>
-                      <p className="text-gray-600 mb-3">Rating: {college.rating > 0 ? `${college.rating}★` : 'Not Rated'}</p>
-                      <div className="text-blue-600 font-medium">
-                        Click to Apply →
+                    <div className="p-5">
+                      <h3 className="text-lg font-bold mb-2 text-gray-900">{college.name}</h3>
+                      <div className="space-y-2 mb-3">
+                        <div className="flex items-center text-sm text-gray-600">
+                          <Calendar className="w-4 h-4 mr-2 text-emerald-600" />
+                          {college.admissionDate}
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600">
+                          <Star className="w-4 h-4 mr-2 text-yellow-500 fill-yellow-500" />
+                          {college.rating > 0 ? `${college.rating} Rating` : 'Not Rated'}
+                        </div>
+                      </div>
+                      <div className="text-emerald-600 font-semibold flex items-center group-hover:text-emerald-700">
+                        Apply Now
+                        <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
                       </div>
                     </div>
                   </div>
@@ -154,18 +166,38 @@ const Admission: React.FC = () => {
           <div>
             <button
               onClick={handleBackToColleges}
-              className="mb-6 text-blue-600 hover:text-blue-800 flex items-center"
+              className="mb-6 text-emerald-600 hover:text-emerald-700 flex items-center font-semibold"
             >
-              ← Back to College Selection
+              <ArrowLeft className="w-5 h-5 mr-1" />
+              Back to College Selection
             </button>
 
-            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-              <h2 className="text-xl font-semibold mb-4">
-                Applying to: {selectedCollege.name}
-              </h2>
+            <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+              <div className="bg-gradient-to-r from-emerald-600 to-teal-700 px-6 py-4">
+                <h2 className="text-xl font-semibold text-white">
+                  Applying to: {selectedCollege.name}
+                </h2>
+              </div>
+              <div className="p-6">
+                <div className="flex items-center space-x-4">
+                  <img
+                    src={selectedCollege.image}
+                    alt={selectedCollege.name}
+                    className="w-16 h-16 rounded-lg object-cover"
+                  />
+                  <div>
+                    <p className="text-sm text-gray-600">Next Admission Date</p>
+                    <p className="text-lg font-bold text-emerald-700">{selectedCollege.admissionDate}</p>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6">
+            <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md overflow-hidden">
+              <div className="bg-gradient-to-r from-emerald-600 to-teal-700 px-6 py-4">
+                <h2 className="text-xl font-semibold text-white">Application Form</h2>
+              </div>
+              <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -175,7 +207,7 @@ const Admission: React.FC = () => {
                     type="text"
                     name="candidateName"
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     placeholder="Enter your full name"
                   />
                 </div>
@@ -188,7 +220,7 @@ const Admission: React.FC = () => {
                     type="text"
                     name="subject"
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     placeholder="Program/Subject you're applying for"
                   />
                 </div>
@@ -202,7 +234,7 @@ const Admission: React.FC = () => {
                     name="email"
                     required
                     defaultValue={user?.email || ''}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     placeholder="your.email@example.com"
                   />
                 </div>
@@ -215,7 +247,7 @@ const Admission: React.FC = () => {
                     type="tel"
                     name="phone"
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     placeholder="+1234567890"
                   />
                 </div>
@@ -228,7 +260,7 @@ const Admission: React.FC = () => {
                     type="date"
                     name="dob"
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   />
                 </div>
 
@@ -239,7 +271,7 @@ const Admission: React.FC = () => {
                   <input
                     type="url"
                     name="image"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     placeholder="https://example.com/your-photo.jpg"
                   />
                 </div>
@@ -253,7 +285,7 @@ const Admission: React.FC = () => {
                   name="address"
                   rows={4}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   placeholder="Enter your full address"
                 />
               </div>
@@ -262,10 +294,11 @@ const Admission: React.FC = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                  className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white px-8 py-3 rounded-md hover:from-emerald-700 hover:to-teal-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-50 transition-all"
                 >
                   {loading ? 'Submitting...' : 'Submit Application'}
                 </button>
+              </div>
               </div>
             </form>
           </div>
