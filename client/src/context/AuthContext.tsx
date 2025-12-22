@@ -32,23 +32,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Check if user is logged in on component mount
   useEffect(() => {
+    console.log("AuthProvider: Setting up auth state listener");
+
     const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
+      console.log("Auth state changed:", firebaseUser?.email || "No user");
       setUser(firebaseUser);
     });
 
     // Handle redirect result from Google login
     getRedirectResult(auth)
       .then((result) => {
+        console.log("Redirect result received:", result);
         if (result?.user) {
-          console.log("Google login successful:", result.user);
+          console.log("Google login successful:", result.user.email);
           setUser(result.user);
+        } else {
+          console.log("No redirect result (not returning from Google auth)");
         }
       })
       .catch((error) => {
-        // Ignore specific errors
-        if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/redirect-cancelled-by-user') {
-          console.error("Redirect result error:", error);
-        }
+        console.error("Redirect result error:", error.code, error.message);
       });
 
     // Cleanup when component unmounts
