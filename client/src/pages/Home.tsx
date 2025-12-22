@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getAllReviews, getColleges, type Review, type College } from '../services/api';
 import CollegeCard from '../components/CollegeCard';
 import SearchSection from '../components/home/SearchSection';
-import CampusGallery from '../components/home/CampusGallery';
+import ImageGallery from '../components/shared/ImageGallery';
 import ResearchPapers from '../components/home/ResearchPapers';
 import StudentReviews from '../components/home/StudentReviews';
 
@@ -70,7 +70,16 @@ const Home: React.FC = () => {
 
       {/* Section 3: College Image Gallery */}
       <section className="mb-16">
-        <CampusGallery colleges={allColleges} />
+        <ImageGallery
+          colleges={allColleges}
+          title="Campus Life Gallery"
+          description="Experience the vibrant campus life and diverse community at our partner colleges"
+          gridCols={{ mobile: 'grid-cols-2', tablet: 'md:grid-cols-4', desktop: 'lg:grid-cols-6' }}
+          imageHeight="h-32"
+          showOverlay={true}
+          hoverScale="scale-110"
+          maxImages={6}
+        />
       </section>
 
       {/* Section 4: Research Papers */}

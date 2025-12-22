@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getCollegeById, type College } from '../services/api';
 import InfoCard from '../components/college-details/InfoCard';
-import Gallery from '../components/college-details/Gallery';
+import ImageGallery from '../components/shared/ImageGallery';
+import LoadingSpinner from '../components/shared/LoadingSpinner';
 import ActionButtons from '../components/college-details/ActionButtons';
 import SportsFacilities from '../components/college-details/SportsFacilities';
 import ResearchWorks from '../components/college-details/ResearchWorks';
@@ -36,7 +37,7 @@ const CollegeDetails: React.FC = () => {
     return (
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
+          <LoadingSpinner size="lg" />
           <p className="mt-4 text-gray-600">Loading college details...</p>
         </div>
       </div>
@@ -104,7 +105,15 @@ const CollegeDetails: React.FC = () => {
           <ResearchWorks researchCount={college.researchCount} />
 
           {college.gallery && college.gallery.length > 0 && (
-            <Gallery images={college.gallery} />
+            <ImageGallery
+              images={college.gallery}
+              title="Campus Gallery"
+              showCard={true}
+              gridCols={{ mobile: 'grid-cols-2', tablet: 'md:grid-cols-3' }}
+              aspectRatio="aspect-square"
+              showOverlay={false}
+              maxImages={6}
+            />
           )}
         </div>
 
