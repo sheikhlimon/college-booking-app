@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { Chrome } from 'lucide-react';
 import AlertMessage from '../components/shared/AlertMessage';
 
 const Register: React.FC = () => {
@@ -10,7 +11,7 @@ const Register: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const { register, user } = useAuth();
+  const { register, loginWithGoogle, user } = useAuth();
   const navigate = useNavigate();
 
   // Redirect if already logged in
@@ -42,6 +43,20 @@ const Register: React.FC = () => {
       await register(email, password);
       setSuccess('Registration successful! Redirecting to home...');
       // Registration successful - useEffect will handle redirect
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleRegister = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      await loginWithGoogle();
+      // Google registration successful - useEffect will handle redirect
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -135,10 +150,12 @@ const Register: React.FC = () => {
           <div className="mt-6">
             <button
               type="button"
-              className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-              disabled
+              onClick={handleGoogleRegister}
+              disabled={loading}
+              className="w-full flex justify-center items-center gap-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
             >
-              <span className="ml-2">Google (Coming soon)</span>
+              <Chrome className="w-5 h-5" />
+              Continue with Google
             </button>
           </div>
         </div>
