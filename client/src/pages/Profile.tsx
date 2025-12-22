@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import { updateUser } from '../services/api';
 import AlertMessage from '../components/shared/AlertMessage';
 import Card from '../components/shared/Card';

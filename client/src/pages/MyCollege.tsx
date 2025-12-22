@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FileText, Star } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import { submitReview, getColleges, getUserAdmissions, type College, type Admission } from '../services/api';
 import EmptyState from '../components/shared/EmptyState';
 import SectionTitle from '../components/shared/SectionTitle';

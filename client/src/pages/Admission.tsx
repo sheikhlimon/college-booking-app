@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getColleges, submitAdmission, type College } from '../services/api';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import PrivateRoute from '../components/PrivateRoute';
 import { Calendar, Star, ArrowLeft, ChevronRight } from 'lucide-react';
 

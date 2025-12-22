@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { User, LogOut } from 'lucide-react';
 import Button from './Button';
@@ -35,7 +35,7 @@ const ProfileDropdown: React.FC = () => {
 
   const getInitials = () => {
     if (user?.displayName) {
-      return user.displayName.split(' ').map(word => word[0]).join('').toUpperCase().slice(0, 2);
+      return user.displayName.split(' ').map((word: string) => word[0]).join('').toUpperCase().slice(0, 2);
     }
     if (user?.email) {
       return user.email[0].toUpperCase();
