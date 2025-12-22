@@ -75,7 +75,7 @@ const MyCollege: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto px-4 py-8">
       <SectionTitle align="left">My College</SectionTitle>
 
       {error && (
@@ -94,63 +94,71 @@ const MyCollege: React.FC = () => {
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-8">
           {/* Admission Info */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">My Applications</h2>
-            {userAdmissions.length > 0 ? (
-              <div className="space-y-4">
-                {userAdmissions.map((admission) => {
-                  const college = typeof admission.collegeId === 'object' ? admission.collegeId : null;
-                  return (
-                    <div key={admission._id} className="border rounded-lg p-4 bg-gray-50">
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <h3 className="font-semibold text-lg">
-                            {college?.name || 'College'}
-                          </h3>
-                          <p className="text-gray-600">Program: {admission.subject}</p>
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="bg-gradient-to-r from-emerald-600 to-teal-700 px-6 py-4">
+              <h2 className="text-xl font-semibold text-white">My Applications</h2>
+            </div>
+            <div className="p-6">
+              {userAdmissions.length > 0 ? (
+                <div className="space-y-4">
+                  {userAdmissions.map((admission) => {
+                    const college = typeof admission.collegeId === 'object' ? admission.collegeId : null;
+                    return (
+                      <div key={admission._id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow bg-gradient-to-br from-white to-gray-50">
+                        <div className="flex justify-between items-start mb-3">
+                          <div className="flex-1">
+                            <h3 className="font-bold text-lg text-gray-900">
+                              {college?.name || 'College'}
+                            </h3>
+                            <p className="text-gray-600 mt-1">Program: {admission.subject}</p>
+                          </div>
+                          <span className="px-3 py-1 text-sm font-semibold rounded-full bg-yellow-100 text-yellow-800 ml-3">
+                            Under Review
+                          </span>
                         </div>
-                        <span className="px-3 py-1 text-sm rounded-full bg-yellow-100 text-yellow-800">
-                          Under Review
-                        </span>
+                        <div className="grid grid-cols-2 gap-4 text-sm mt-3 pt-3 border-t border-gray-200">
+                          <div>
+                            <span className="text-gray-500 block">Applied</span>
+                            <p className="font-medium text-gray-900">{new Date(admission.createdAt).toLocaleDateString()}</p>
+                          </div>
+                          <div>
+                            <span className="text-gray-500 block">Email</span>
+                            <p className="font-medium text-gray-900 text-sm">{admission.email}</p>
+                          </div>
+                        </div>
                       </div>
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <span className="text-gray-600">Applied:</span>
-                          <p className="font-medium">{new Date(admission.createdAt).toLocaleDateString()}</p>
-                        </div>
-                        <div>
-                          <span className="text-gray-600">Email:</span>
-                          <p className="font-medium">{admission.email}</p>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <EmptyState
-                icon="📝"
-                title="No Applications Found"
-                message="You haven't applied to any colleges yet."
-                action={{
-                  label: 'Apply to a College',
-                  onClick: () => window.location.href = '/admission'
-                }}
-              />
-            )}
+                    );
+                  })}
+                </div>
+              ) : (
+                <EmptyState
+                  icon="📝"
+                  title="No Applications Found"
+                  message="You haven't applied to any colleges yet."
+                  action={{
+                    label: 'Apply to a College',
+                    onClick: () => window.location.href = '/admission'
+                  }}
+                />
+              )}
+            </div>
           </div>
 
           {/* Available Colleges */}
           {colleges.length > 0 && (
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Available Colleges</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {colleges.slice(0, 4).map((college) => (
-                  <div key={college._id} className="text-sm">
-                    <p className="font-medium">{college.name}</p>
-                    <p className="text-gray-600">Rating: {college.rating}★</p>
-                  </div>
-                ))}
+            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+              <div className="bg-gradient-to-r from-emerald-600 to-teal-700 px-6 py-4">
+                <h2 className="text-xl font-semibold text-white">Available Colleges</h2>
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {colleges.slice(0, 4).map((college) => (
+                    <div key={college._id} className="p-3 border border-gray-200 rounded-lg hover:shadow-md transition-shadow bg-gray-50">
+                      <p className="font-semibold text-gray-900">{college.name}</p>
+                      <p className="text-sm text-gray-600 mt-1">Rating: {college.rating}★</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
@@ -159,9 +167,12 @@ const MyCollege: React.FC = () => {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Review Form */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-lg font-semibold mb-4">Write a Review</h2>
-            <form onSubmit={handleReviewSubmit} className="space-y-4">
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="bg-gradient-to-r from-emerald-600 to-teal-700 px-6 py-4">
+              <h2 className="text-lg font-semibold text-white">Write a Review</h2>
+            </div>
+            <div className="p-6">
+              <form onSubmit={handleReviewSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   College
@@ -218,21 +229,33 @@ const MyCollege: React.FC = () => {
                 {loading ? 'Submitting...' : 'Submit Review'}
               </Button>
             </form>
+            </div>
           </div>
 
           {/* Quick Actions */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="font-semibold mb-4">Quick Actions</h3>
-            <div className="space-y-3">
-              <button className="w-full text-left px-4 py-2 border rounded hover:bg-gray-50">
-                Apply to Another College
-              </button>
-              <button className="w-full text-left px-4 py-2 border rounded hover:bg-gray-50">
-                Download Admission Letter
-              </button>
-              <button className="w-full text-left px-4 py-2 border rounded hover:bg-gray-50">
-                Contact Support
-              </button>
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="bg-gradient-to-r from-emerald-600 to-teal-700 px-6 py-4">
+              <h3 className="font-semibold text-white">Quick Actions</h3>
+            </div>
+            <div className="p-6">
+              <div className="space-y-3">
+                <button
+                  onClick={() => window.location.href = '/admission'}
+                  className="w-full text-left px-4 py-2 border border-gray-200 rounded-lg hover:bg-emerald-50 hover:border-emerald-300 transition-colors"
+                >
+                  Apply to Another College
+                </button>
+                <button
+                  className="w-full text-left px-4 py-2 border border-gray-200 rounded-lg hover:bg-emerald-50 hover:border-emerald-300 transition-colors"
+                >
+                  Download Admission Letter
+                </button>
+                <button
+                  className="w-full text-left px-4 py-2 border border-gray-200 rounded-lg hover:bg-emerald-50 hover:border-emerald-300 transition-colors"
+                >
+                  Contact Support
+                </button>
+              </div>
             </div>
           </div>
         </div>
