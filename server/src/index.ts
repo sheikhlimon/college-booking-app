@@ -6,6 +6,7 @@ import collegeRoutes from "./routes/collegeRoutes";
 import admissionRoutes from "./routes/admissionRoutes";
 import reviewRoutes from "./routes/reviewRoutes";
 import userRoutes from "./routes/userRoutes";
+import researchPaperRoutes from "./routes/researchPaperRoutes";
 
 // Load env
 dotenv.config();
@@ -26,6 +27,7 @@ app.use("/api/colleges", collegeRoutes);
 app.use("/api/admissions", admissionRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/papers", researchPaperRoutes);
 
 // Root route
 app.get("/", (_req, res) => {

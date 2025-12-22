@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import College from "./models/College";
+import Review from "./models/Review";
+import ResearchPaper from "./models/ResearchPaper";
 
 dotenv.config();
 
@@ -113,6 +115,106 @@ const seedColleges = async () => {
     // Clear existing reviews (start with no reviews as per requirements)
     await Review.deleteMany({});
     console.log("Reviews cleared - starting with user-generated reviews only");
+
+    // Clear existing research papers
+    await ResearchPaper.deleteMany({});
+    console.log("Cleared existing research papers");
+
+    // Get college IDs for reference
+    const savedColleges = await College.find({});
+    const techInstitute = savedColleges.find(c => c.name === "Tech Institute");
+    const businessSchool = savedColleges.find(c => c.name === "Business School");
+    const medicalUniversity = savedColleges.find(c => c.name === "Medical University");
+    const engineeringCollege = savedColleges.find(c => c.name === "Engineering College");
+    const scienceAcademy = savedColleges.find(c => c.name === "Science Academy");
+
+    // Sample research papers data
+    const papers = [
+      {
+        collegeId: techInstitute!._id,
+        title: "AI in Healthcare: Revolutionizing Patient Care Through Machine Learning",
+        authors: ["Dr. Sarah Chen", "Prof. Michael Roberts"],
+        abstract: "This paper explores the transformative applications of artificial intelligence in healthcare, focusing on predictive diagnostics and personalized treatment plans.",
+        link: "https://arxiv.org/abs/2305.12345",
+        category: "Artificial Intelligence",
+        publishDate: new Date("2024-03-15"),
+        citations: 45
+      },
+      {
+        collegeId: techInstitute!._id,
+        title: "Quantum Computing: Breaking Modern Cryptography",
+        authors: ["Dr. James Wilson", "Dr. Emily Zhang"],
+        abstract: "An analysis of quantum computing's potential impact on current cryptographic systems and proposed post-quantum solutions.",
+        link: "https://arxiv.org/abs/2401.67890",
+        category: "Quantum Computing",
+        publishDate: new Date("2024-01-20"),
+        citations: 78
+      },
+      {
+        collegeId: businessSchool!._id,
+        title: "Sustainable Business Models in the Digital Age",
+        authors: ["Prof. Linda Martinez", "Dr. David Kim"],
+        abstract: "Examining how digital transformation enables sustainable business practices and long-term value creation.",
+        link: "https://doi.org/10.1177/12345678901234",
+        category: "Business Strategy",
+        publishDate: new Date("2024-02-10"),
+        citations: 32
+      },
+      {
+        collegeId: medicalUniversity!._id,
+        title: "CRISPR Gene Editing: Ethical Implications and Clinical Applications",
+        authors: ["Dr. Amanda Foster", "Prof. Robert Lee"],
+        abstract: "A comprehensive review of CRISPR technology's therapeutic potential and the ethical considerations surrounding gene editing in humans.",
+        link: "https://www.nature.com/articles/12345",
+        category: "Biotechnology",
+        publishDate: new Date("2024-04-05"),
+        citations: 156
+      },
+      {
+        collegeId: engineeringCollege!._id,
+        title: "Next-Generation Battery Technologies for Electric Vehicles",
+        authors: ["Dr. Raj Patel", "Prof. Maria Garcia"],
+        abstract: "Investigating solid-state battery technologies and their potential to revolutionize electric vehicle range and charging infrastructure.",
+        link: "https://ieeexplore.ieee.org/document/1234567",
+        category: "Energy Storage",
+        publishDate: new Date("2024-03-28"),
+        citations: 89
+      },
+      {
+        collegeId: engineeringCollege!._id,
+        title: "Autonomous Drone Navigation in Urban Environments",
+        authors: ["Dr. Chris Taylor", "Dr. Sophia Wang"],
+        abstract: "Developing computer vision algorithms for safe autonomous drone navigation in complex urban settings.",
+        link: "https://arxiv.org/abs/2402.34567",
+        category: "Robotics",
+        publishDate: new Date("2024-02-18"),
+        citations: 54
+      },
+      {
+        collegeId: scienceAcademy!._id,
+        title: "Climate Change Modeling: Advanced Predictive Analytics",
+        authors: ["Dr. Jennifer Brown", "Prof. Thomas Anderson"],
+        abstract: "Using machine learning to improve climate change prediction models and assess environmental impact scenarios.",
+        link: "https://www.science.org/article/1234567",
+        category: "Climate Science",
+        publishDate: new Date("2024-01-30"),
+        citations: 123
+      },
+      {
+        collegeId: techInstitute!._id,
+        title: "Natural Language Processing for Mental Health Support",
+        authors: ["Dr. Lisa Park", "Dr. Kevin Nguyen"],
+        abstract: "Exploring how NLP and sentiment analysis can be leveraged to provide accessible mental health support through chatbots and AI assistants.",
+        link: "https://aclanthology.org/2024.emnlp-main.123",
+        category: "Artificial Intelligence",
+        publishDate: new Date("2024-04-12"),
+        citations: 28
+      }
+    ];
+
+    // Insert research papers into database
+    await ResearchPaper.insertMany(papers);
+    console.log("Sample research papers added successfully!");
 
     // Close connection
     await mongoose.connection.close();
