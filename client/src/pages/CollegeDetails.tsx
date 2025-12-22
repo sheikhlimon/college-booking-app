@@ -102,7 +102,7 @@ const CollegeDetails: React.FC = () => {
 
           <Events events={college.events || []} />
           <SportsFacilities sports={college.sports || []} />
-          <ResearchWorks researchCount={college.researchCount} />
+          <ResearchWorks collegeId={college._id} researchCount={college.researchCount} />
 
           {college.gallery && college.gallery.length > 0 && (
             <ImageGallery

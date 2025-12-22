@@ -1,56 +1,106 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import SectionTitle from '../shared/SectionTitle';
+import PaperCard from '../shared/PaperCard';
+import EmptyState from '../shared/EmptyState';
+import LoadingSpinner from '../shared/LoadingSpinner';
+import { getAllPapers, ResearchPaper } from '../../services/api';
 
 const ResearchPapers: React.FC = () => {
-  const papers = [
-    {
-      title: "AI in Healthcare: Revolutionizing Patient Care",
-      college: "Tech Institute",
-      link: "#",
-      category: "Artificial Intelligence"
-    },
-    {
-      title: "Sustainable Business Models for the Future",
-      college: "Business School",
-      link: "#",
-      category: "Business Studies"
-    },
-    {
-      title: "CRISPR Gene Editing: Medical Breakthroughs",
-      college: "Medical University",
-      link: "#",
-      category: "Biotechnology"
+  const [papers, setPapers] = useState<ResearchPaper[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+
+  const categories = ['All', 'Artificial Intelligence', 'Quantum Computing', 'Business Strategy',
+    'Biotechnology', 'Energy Storage', 'Robotics', 'Climate Science'];
+
+  useEffect(() => {
+    fetchPapers();
+  }, [selectedCategory]);
+
+  const fetchPapers = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const filters = selectedCategory !== 'All' ? { category: selectedCategory } : undefined;
+      const data = await getAllPapers(filters);
+      setPapers(data);
+    } catch (err) {
+      setError('Failed to load research papers');
+      console.error('Error fetching papers:', err);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  if (loading) {
+    return (
+      <div className="mb-16">
+        <SectionTitle>Research Highlights</SectionTitle>
+        <div className="text-center py-12">
+          <LoadingSpinner />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="mb-16">
+        <SectionTitle>Research Highlights</SectionTitle>
+        <EmptyState
+          icon="📚"
+          title="Unable to Load Papers"
+          message={error}
+          action={{ label: 'Try Again', onClick: fetchPapers }}
+        />
+      </div>
+    );
+  }
+
+  if (papers.length === 0) {
+    return (
+      <div className="mb-16">
+        <SectionTitle>Research Highlights</SectionTitle>
+        <EmptyState
+          icon="📚"
+          title="No Research Papers Found"
+          message="Check back later for new publications from our partner institutions."
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="mb-16">
-      <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Research Highlights</h2>
-      <div className="max-w-4xl mx-auto">
+      <SectionTitle>Research Highlights</SectionTitle>
+
+      <div className="max-w-6xl mx-auto">
         <p className="text-gray-600 mb-6 text-center">
           Discover groundbreaking research from our partner institutions
         </p>
-        <div className="space-y-4">
-          {papers.map((paper, index) => (
-            <div key={index} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow duration-300">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full mb-2">
-                    {paper.category}
-                  </span>
-                  <h3 className="font-semibold text-gray-900 mb-1">{paper.title}</h3>
-                  <p className="text-sm text-gray-600">by {paper.college}</p>
-                </div>
-                <a
-                  href={paper.link}
-                  className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center ml-4"
-                >
-                  Read
-                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </a>
-              </div>
-            </div>
+
+        {/* Category Filter */}
+        <div className="flex flex-wrap justify-center gap-2 mb-8">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                selectedCategory === category
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+
+        {/* Papers Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {papers.map((paper) => (
+            <PaperCard key={paper._id} paper={paper} showCollege={true} />
           ))}
         </div>
       </div>

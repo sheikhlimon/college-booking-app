@@ -1,13 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import InfoCard from './InfoCard';
+import PaperCard from '../shared/PaperCard';
+import EmptyState from '../shared/EmptyState';
+import LoadingSpinner from '../shared/LoadingSpinner';
+import { getPapersByCollege, ResearchPaper } from '../../services/api';
 
 interface ResearchWorksProps {
+  collegeId: string;
   researchCount: number;
 }
 
-const ResearchWorks: React.FC<ResearchWorksProps> = ({ researchCount }) => {
+const ResearchWorks: React.FC<ResearchWorksProps> = ({ collegeId, researchCount }) => {
+  const [papers, setPapers] = useState<ResearchPaper[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchPapers();
+  }, [collegeId]);
+
+  const fetchPapers = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await getPapersByCollege(collegeId);
+      setPapers(data);
+    } catch (err) {
+      setError('Failed to load research papers');
+      console.error('Error fetching papers:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <InfoCard title="Research Works">
+      {/* Research Count */}
       <div className="bg-emerald-50 rounded-lg p-4 mb-4">
         <div className="flex items-center justify-between">
           <div>
@@ -19,27 +47,36 @@ const ResearchWorks: React.FC<ResearchWorksProps> = ({ researchCount }) => {
           </svg>
         </div>
       </div>
-      <div className="space-y-3">
-        <h3 className="font-semibold text-lg">Research Areas</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div className="border rounded-lg p-3 hover:shadow-md transition-shadow">
-            <h4 className="font-medium text-gray-900">Computer Science</h4>
-            <p className="text-sm text-gray-600">AI, Machine Learning, Data Science</p>
-          </div>
-          <div className="border rounded-lg p-3 hover:shadow-md transition-shadow">
-            <h4 className="font-medium text-gray-900">Engineering</h4>
-            <p className="text-sm text-gray-600">Robotics, IoT, Renewable Energy</p>
-          </div>
-          <div className="border rounded-lg p-3 hover:shadow-md transition-shadow">
-            <h4 className="font-medium text-gray-900">Business Studies</h4>
-            <p className="text-sm text-gray-600">Finance, Marketing, Entrepreneurship</p>
-          </div>
-          <div className="border rounded-lg p-3 hover:shadow-md transition-shadow">
-            <h4 className="font-medium text-gray-900">Natural Sciences</h4>
-            <p className="text-sm text-gray-600">Physics, Chemistry, Biology</p>
+
+      {/* Papers List */}
+      {loading ? (
+        <div className="text-center py-8">
+          <LoadingSpinner />
+          <p className="mt-2 text-gray-600">Loading research papers...</p>
+        </div>
+      ) : error ? (
+        <EmptyState
+          icon="📚"
+          title="Unable to Load Papers"
+          message={error}
+          action={{ label: 'Try Again', onClick: fetchPapers }}
+        />
+      ) : papers.length === 0 ? (
+        <EmptyState
+          icon="📚"
+          title="No Research Papers Yet"
+          message="This college hasn't published any research papers yet."
+        />
+      ) : (
+        <div className="space-y-4">
+          <h3 className="font-semibold text-lg text-gray-900 mb-3">Recent Publications</h3>
+          <div className="space-y-4">
+            {papers.map((paper) => (
+              <PaperCard key={paper._id} paper={paper} showCollege={false} />
+            ))}
           </div>
         </div>
-      </div>
+      )}
     </InfoCard>
   );
 };
