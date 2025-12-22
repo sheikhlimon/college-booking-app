@@ -3,7 +3,7 @@ import SectionTitle from '../shared/SectionTitle';
 import PaperCard from '../shared/PaperCard';
 import EmptyState from '../shared/EmptyState';
 import LoadingSpinner from '../shared/LoadingSpinner';
-import { getAllPapers, ResearchPaper } from '../../services/api';
+import { getAllPapers, type ResearchPaper } from '../../services/api';
 
 const ResearchPapers: React.FC = () => {
   const [papers, setPapers] = useState<ResearchPaper[]>([]);
@@ -11,8 +11,7 @@ const ResearchPapers: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
-  const categories = ['All', 'Artificial Intelligence', 'Quantum Computing', 'Business Strategy',
-    'Biotechnology', 'Energy Storage', 'Robotics', 'Climate Science'];
+  const categories = ['All', 'Artificial Intelligence', 'Quantum Computing', 'Business Strategy'];
 
   useEffect(() => {
     fetchPapers();

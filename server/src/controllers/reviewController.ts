@@ -24,7 +24,16 @@ export const createReview = async (req: Request, res: Response): Promise<void> =
 
     // Return created review with 201 status
     res.status(201).json(savedReview);
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Review creation error:', error);
+
+    // Handle validation errors
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map((e: any) => e.message);
+      res.status(400).json({ message: messages.join(', ') });
+      return;
+    }
+
     res.status(500).json({ message: 'Server error' });
   }
 };

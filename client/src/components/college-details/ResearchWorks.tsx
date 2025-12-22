@@ -3,7 +3,7 @@ import InfoCard from './InfoCard';
 import PaperCard from '../shared/PaperCard';
 import EmptyState from '../shared/EmptyState';
 import LoadingSpinner from '../shared/LoadingSpinner';
-import { getPapersByCollege, ResearchPaper } from '../../services/api';
+import { getPapersByCollege, type ResearchPaper } from '../../services/api';
 
 interface ResearchWorksProps {
   collegeId: string;

@@ -124,9 +124,6 @@ const seedColleges = async () => {
     const savedColleges = await College.find({});
     const techInstitute = savedColleges.find(c => c.name === "Tech Institute");
     const businessSchool = savedColleges.find(c => c.name === "Business School");
-    const medicalUniversity = savedColleges.find(c => c.name === "Medical University");
-    const engineeringCollege = savedColleges.find(c => c.name === "Engineering College");
-    const scienceAcademy = savedColleges.find(c => c.name === "Science Academy");
 
     // Sample research papers data
     const papers = [
@@ -159,56 +156,6 @@ const seedColleges = async () => {
         category: "Business Strategy",
         publishDate: new Date("2024-02-10"),
         citations: 32
-      },
-      {
-        collegeId: medicalUniversity!._id,
-        title: "CRISPR Gene Editing: Ethical Implications and Clinical Applications",
-        authors: ["Dr. Amanda Foster", "Prof. Robert Lee"],
-        abstract: "A comprehensive review of CRISPR technology's therapeutic potential and the ethical considerations surrounding gene editing in humans.",
-        link: "https://www.nature.com/articles/12345",
-        category: "Biotechnology",
-        publishDate: new Date("2024-04-05"),
-        citations: 156
-      },
-      {
-        collegeId: engineeringCollege!._id,
-        title: "Next-Generation Battery Technologies for Electric Vehicles",
-        authors: ["Dr. Raj Patel", "Prof. Maria Garcia"],
-        abstract: "Investigating solid-state battery technologies and their potential to revolutionize electric vehicle range and charging infrastructure.",
-        link: "https://ieeexplore.ieee.org/document/1234567",
-        category: "Energy Storage",
-        publishDate: new Date("2024-03-28"),
-        citations: 89
-      },
-      {
-        collegeId: engineeringCollege!._id,
-        title: "Autonomous Drone Navigation in Urban Environments",
-        authors: ["Dr. Chris Taylor", "Dr. Sophia Wang"],
-        abstract: "Developing computer vision algorithms for safe autonomous drone navigation in complex urban settings.",
-        link: "https://arxiv.org/abs/2402.34567",
-        category: "Robotics",
-        publishDate: new Date("2024-02-18"),
-        citations: 54
-      },
-      {
-        collegeId: scienceAcademy!._id,
-        title: "Climate Change Modeling: Advanced Predictive Analytics",
-        authors: ["Dr. Jennifer Brown", "Prof. Thomas Anderson"],
-        abstract: "Using machine learning to improve climate change prediction models and assess environmental impact scenarios.",
-        link: "https://www.science.org/article/1234567",
-        category: "Climate Science",
-        publishDate: new Date("2024-01-30"),
-        citations: 123
-      },
-      {
-        collegeId: techInstitute!._id,
-        title: "Natural Language Processing for Mental Health Support",
-        authors: ["Dr. Lisa Park", "Dr. Kevin Nguyen"],
-        abstract: "Exploring how NLP and sentiment analysis can be leveraged to provide accessible mental health support through chatbots and AI assistants.",
-        link: "https://aclanthology.org/2024.emnlp-main.123",
-        category: "Artificial Intelligence",
-        publishDate: new Date("2024-04-12"),
-        citations: 28
       }
     ];
 

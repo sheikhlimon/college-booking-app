@@ -7,6 +7,7 @@ interface FormFieldProps {
   className?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
 }
 
 const FormField: React.FC<FormFieldProps> = ({
@@ -17,7 +18,8 @@ const FormField: React.FC<FormFieldProps> = ({
   required = false,
   className = '',
   value,
-  onChange
+  onChange,
+  disabled = false
 }) => {
   return (
     <div className={className}>
@@ -31,7 +33,8 @@ const FormField: React.FC<FormFieldProps> = ({
         required={required}
         value={value}
         onChange={onChange}
-        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+        disabled={disabled}
+        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:bg-gray-100 disabled:text-gray-500"
         placeholder={placeholder}
       />
     </div>
