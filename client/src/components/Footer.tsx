@@ -1,4 +1,5 @@
 import React from 'react';
+import { Mail, Phone, MapPin } from 'lucide-react';
 
 const Footer: React.FC = () => {
   return (
@@ -72,9 +73,9 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="text-lg font-semibold text-gray-900 mb-4">Contact</h4>
             <div className="space-y-2 text-gray-600 text-sm">
-              <p>📧 info@collegebooking.com</p>
-              <p>📞 +880 1234-567890</p>
-              <p>📍 Dhanmondi, Road 8</p>
+              <p className="flex items-center"><Mail className="w-4 h-4 mr-2" /> info@collegebooking.com</p>
+              <p className="flex items-center"><Phone className="w-4 h-4 mr-2" /> +880 1234-567890</p>
+              <p className="flex items-center"><MapPin className="w-4 h-4 mr-2" /> Dhanmondi, Road 8</p>
               <p>Dhaka, Bangladesh 1209</p>
             </div>
           </div>

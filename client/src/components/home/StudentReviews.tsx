@@ -1,4 +1,5 @@
 import React from 'react';
+import { Star } from 'lucide-react';
 import { type Review } from '../../services/api';
 import LoadingSpinner from '../shared/LoadingSpinner';
 import SectionTitle from '../shared/SectionTitle';
@@ -34,7 +35,7 @@ const StudentReviews: React.FC<StudentReviewsProps> = ({ reviews, loading }) => 
         </div>
       ) : (
         <EmptyState
-          icon="⭐"
+          icon={<Star className="w-16 h-16 text-gray-300 mx-auto" />}
           title="No Reviews Yet"
           message="Be the first to share your experience!"
         />

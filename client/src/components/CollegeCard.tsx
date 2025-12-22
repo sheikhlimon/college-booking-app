@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Star } from 'lucide-react';
 import { type College } from '../services/api';
 import Button from './Button';
 
@@ -40,7 +41,11 @@ const CollegeCard: React.FC<CollegeCardProps> = ({
             <div className="flex justify-between">
               <span className="text-gray-600">Rating:</span>
               <span className="font-semibold text-emerald-600">
-                {college.rating > 0 ? `${college.rating}★` : 'Not Rated'}
+                {college.rating > 0 ? (
+                  <span className="inline-flex items-center">
+                    {college.rating} <Star className="w-4 h-4 ml-1 text-yellow-500 fill-yellow-500" />
+                  </span>
+                ) : 'Not Rated'}
               </span>
             </div>
             <div className="flex justify-between">

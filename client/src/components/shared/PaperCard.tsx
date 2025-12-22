@@ -1,4 +1,5 @@
 import React from 'react';
+import { BookOpen, GraduationCap, ExternalLink } from 'lucide-react';
 
 interface Paper {
   _id: string;
@@ -42,8 +43,8 @@ const PaperCard: React.FC<PaperCardProps> = ({ paper, showCollege = false }) => 
             {paper.category}
           </span>
           {paper.citations !== undefined && (
-            <span className="text-xs text-emerald-100">
-              📚 {paper.citations} citations
+            <span className="text-xs text-emerald-100 inline-flex items-center">
+              <BookOpen className="w-3 h-3 mr-1" /> {paper.citations} citations
             </span>
           )}
         </div>
@@ -82,8 +83,8 @@ const PaperCard: React.FC<PaperCardProps> = ({ paper, showCollege = false }) => 
 
         {showCollege && paper.collegeId && (
           <div className="pt-3 border-t border-gray-200">
-            <span className="text-xs font-semibold text-emerald-700">
-              🎓 {paper.collegeId.name}
+            <span className="text-xs font-semibold text-emerald-700 inline-flex items-center">
+              <GraduationCap className="w-3 h-3 mr-1" /> {paper.collegeId.name}
             </span>
           </div>
         )}
@@ -95,9 +96,7 @@ const PaperCard: React.FC<PaperCardProps> = ({ paper, showCollege = false }) => 
             className="inline-flex items-center text-sm font-semibold text-emerald-600 hover:text-emerald-800 transition-colors"
           >
             Read Paper
-            <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
+            <ExternalLink className="w-4 h-4 ml-1" />
           </button>
         </div>
       </div>

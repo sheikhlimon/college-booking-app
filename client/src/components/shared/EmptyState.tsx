@@ -1,7 +1,8 @@
 import React from 'react';
+import { Inbox } from 'lucide-react';
 
 interface EmptyStateProps {
-  icon?: string;
+  icon?: React.ReactNode;
   title: string;
   message?: string;
   action?: {
@@ -12,7 +13,7 @@ interface EmptyStateProps {
 }
 
 const EmptyState: React.FC<EmptyStateProps> = ({
-  icon = '📭',
+  icon = <Inbox className="w-16 h-16 text-gray-300 mx-auto" />,
   title,
   message,
   action,
@@ -20,7 +21,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
 }) => {
   return (
     <div className={`text-center py-12 ${className}`}>
-      {icon && <div className="text-6xl mb-4">{icon}</div>}
+      {icon && <div className="mb-4">{icon}</div>}
       <h3 className="text-xl font-semibold text-gray-900 mb-2">{title}</h3>
       {message && <p className="text-gray-500 mb-6">{message}</p>}
       {action && (

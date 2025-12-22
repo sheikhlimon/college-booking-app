@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getColleges, submitAdmission, type College } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import PrivateRoute from '../components/PrivateRoute';
-import { Calendar, Star, ArrowLeft } from 'lucide-react';
+import { Calendar, Star, ArrowLeft, ChevronRight } from 'lucide-react';
 
 const Admission: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -151,9 +151,7 @@ const Admission: React.FC = () => {
                       </div>
                       <div className="text-emerald-600 font-semibold flex items-center group-hover:text-emerald-700">
                         Apply Now
-                        <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                        </svg>
+                        <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                       </div>
                     </div>
                   </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { ChevronRight } from 'lucide-react';
 import InfoCard from './InfoCard';
 
 interface EventsProps {
@@ -18,9 +19,7 @@ const Events: React.FC<EventsProps> = ({ events }) => {
                 <h3 className="font-semibold text-lg text-gray-900">{event}</h3>
                 <p className="text-sm text-gray-600">Click for more details</p>
               </div>
-              <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
+              <ChevronRight className="w-5 h-5 text-emerald-600" />
             </div>
           </div>
         ))}

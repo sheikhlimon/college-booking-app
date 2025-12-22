@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BookOpen } from 'lucide-react';
 import SectionTitle from '../shared/SectionTitle';
 import PaperCard from '../shared/PaperCard';
 import EmptyState from '../shared/EmptyState';
@@ -48,7 +49,7 @@ const ResearchPapers: React.FC = () => {
       <div className="mb-16">
         <SectionTitle>Research Highlights</SectionTitle>
         <EmptyState
-          icon="📚"
+          icon={<BookOpen className="w-16 h-16 text-gray-300 mx-auto" />}
           title="Unable to Load Papers"
           message={error}
           action={{ label: 'Try Again', onClick: fetchPapers }}
@@ -62,7 +63,7 @@ const ResearchPapers: React.FC = () => {
       <div className="mb-16">
         <SectionTitle>Research Highlights</SectionTitle>
         <EmptyState
-          icon="📚"
+          icon={<BookOpen className="w-16 h-16 text-gray-300 mx-auto" />}
           title="No Research Papers Found"
           message="Check back later for new publications from our partner institutions."
         />

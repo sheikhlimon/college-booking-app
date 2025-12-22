@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FileText, Star } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { submitReview, getColleges, getUserAdmissions, type College } from '../services/api';
 import EmptyState from '../components/shared/EmptyState';
@@ -102,7 +103,7 @@ const MyCollege: React.FC = () => {
                 </div>
               ) : (
                 <EmptyState
-                  icon="📝"
+                  icon={<FileText className="w-16 h-16 text-gray-300 mx-auto" />}
                   title="No Applications Found"
                   message="You haven't applied to any colleges yet."
                   action={{
@@ -125,7 +126,7 @@ const MyCollege: React.FC = () => {
                   {colleges.slice(0, 4).map((college) => (
                     <div key={college._id} className="p-3 border border-gray-200 rounded-lg hover:shadow-md transition-shadow bg-gray-50">
                       <p className="font-semibold text-gray-900">{college.name}</p>
-                      <p className="text-sm text-gray-600 mt-1">Rating: {college.rating}★</p>
+                      <p className="text-sm text-gray-600 mt-1">Rating: {college.rating}<Star className="w-3 h-3 inline ml-1 text-yellow-500 fill-yellow-500" /></p>
                     </div>
                   ))}
                 </div>

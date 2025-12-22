@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { Star, Calendar } from 'lucide-react';
 import { getCollegeById, type College } from '../services/api';
 import InfoCard from '../components/college-details/InfoCard';
 import ImageGallery from '../components/shared/ImageGallery';
@@ -58,7 +59,13 @@ const CollegeDetails: React.FC = () => {
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-2">{college.name}</h1>
-        <p className="text-xl text-gray-600">Rating: {college.rating > 0 ? `${college.rating}★` : 'Not Rated'}</p>
+        <p className="text-xl text-gray-600 inline-flex items-center">
+          Rating: {college.rating > 0 ? (
+            <span className="inline-flex items-center ml-1">
+              {college.rating} <Star className="w-5 h-5 ml-1 text-yellow-500 fill-yellow-500" />
+            </span>
+          ) : 'Not Rated'}
+        </p>
       </div>
 
       <div className="bg-gray-200 h-64 rounded-lg mb-8 flex items-center justify-center overflow-hidden">
@@ -83,9 +90,7 @@ const CollegeDetails: React.FC = () => {
                   <h3 className="font-semibold text-lg text-emerald-800">Next Admission Date</h3>
                   <p className="text-emerald-600">{college.admissionDate}</p>
                 </div>
-                <svg className="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+                <Calendar className="w-8 h-8 text-emerald-600" />
               </div>
               <div className="space-y-2">
                 <h4 className="font-semibold text-gray-900">Admission Requirements:</h4>
