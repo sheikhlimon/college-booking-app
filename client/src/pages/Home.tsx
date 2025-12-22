@@ -21,7 +21,7 @@ const Home: React.FC = () => {
           getAllReviews(),
           getColleges()
         ]);
-        setReviews(reviewsData.slice(0, 6));
+        setReviews(reviewsData);
         setAllColleges(collegesData);
         setFilteredColleges(collegesData.slice(0, 3));
       } catch (error) {
@@ -53,23 +53,7 @@ const Home: React.FC = () => {
       <FeaturedColleges colleges={filteredColleges} />
       <CampusGallery colleges={allColleges} />
       <ResearchPapers />
-      <StudentReviews reviews={reviews} loading={loading} />
-
-      {/* Quick Info */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-        <div className="bg-white rounded-lg shadow-md p-6 text-center">
-          <h3 className="text-lg font-semibold mb-2">50+ Colleges</h3>
-          <p className="text-gray-600">Wide selection of institutions</p>
-        </div>
-        <div className="bg-white rounded-lg shadow-md p-6 text-center">
-          <h3 className="text-lg font-semibold mb-2">Easy Admission</h3>
-          <p className="text-gray-600">Simple application process</p>
-        </div>
-        <div className="bg-white rounded-lg shadow-md p-6 text-center">
-          <h3 className="text-lg font-semibold mb-2">Track Progress</h3>
-          <p className="text-gray-600">Monitor your applications</p>
-        </div>
-      </div>
+      <StudentReviews reviews={reviews.slice(0, 3)} loading={loading} />
     </div>
   );
 };
