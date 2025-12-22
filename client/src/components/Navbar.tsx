@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import ProfileDropdown from './ProfileDropdown';
 
 const Navbar: React.FC = () => {
   const { user } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <nav className="bg-white border-b border-gray-200 shadow-sm">
@@ -22,7 +24,7 @@ const Navbar: React.FC = () => {
             </Link>
           </div>
 
-          {/* Navigation Links */}
+          {/* Desktop Navigation Links */}
           <div className="hidden md:flex items-center space-x-8">
             <Link
               to="/"
@@ -59,11 +61,70 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Right side */}
-          <div className="flex items-center">
-            <ProfileDropdown />
+          <div className="flex items-center space-x-4">
+            <div className="hidden md:block">
+              <ProfileDropdown />
+            </div>
+
+            {/* Mobile menu button */}
+            <button
+              type="button"
+              className="md:hidden p-2 rounded-md text-gray-700 hover:text-emerald-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t border-gray-200">
+          <div className="px-4 py-4 space-y-3">
+            <Link
+              to="/"
+              className="block px-3 py-2 text-gray-700 hover:text-emerald-600 hover:bg-gray-50 rounded-md font-medium transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <Link
+              to="/colleges"
+              className="block px-3 py-2 text-gray-700 hover:text-emerald-600 hover:bg-gray-50 rounded-md font-medium transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Colleges
+            </Link>
+            {user && (
+              <>
+                <Link
+                  to="/admission"
+                  className="block px-3 py-2 text-gray-700 hover:text-emerald-600 hover:bg-gray-50 rounded-md font-medium transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Admission
+                </Link>
+                <Link
+                  to="/my-college"
+                  className="block px-3 py-2 text-gray-700 hover:text-emerald-600 hover:bg-gray-50 rounded-md font-medium transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  My College
+                </Link>
+              </>
+            )}
+            {/* Profile dropdown in mobile menu */}
+            <div className="md:hidden pt-2 border-t border-gray-200">
+              <ProfileDropdown />
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
