@@ -7,7 +7,7 @@ const NotFound: React.FC = () => {
       <div className="max-w-xl mx-auto text-center">
         {/* 404 Number */}
         <div className="mb-6 relative">
-          <h1 className="text-7xl md:text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 leading-none">
+          <h1 className="text-7xl md:text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-700 leading-none">
             404
           </h1>
         </div>
@@ -26,13 +26,13 @@ const NotFound: React.FC = () => {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             to="/"
-            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-lg"
+            className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white px-6 py-3 rounded-xl font-medium hover:from-emerald-700 hover:to-teal-800 transition-all duration-200 transform hover:scale-105 shadow-lg"
           >
             Back to Home
           </Link>
           <Link
             to="/colleges"
-            className="bg-white text-gray-700 px-6 py-3 rounded-xl font-medium border-2 border-gray-300 hover:border-blue-600 hover:text-blue-600 transition-all duration-200 shadow-md"
+            className="bg-white text-gray-700 px-6 py-3 rounded-xl font-medium border-2 border-gray-300 hover:border-emerald-600 hover:text-emerald-600 transition-all duration-200 shadow-md"
           >
             Browse Colleges
           </Link>

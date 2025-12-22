@@ -12,7 +12,7 @@ const StudentReviews: React.FC<StudentReviewsProps> = ({ reviews, loading }) => 
       <div className="mb-12">
         <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Student Reviews</h2>
         <div className="text-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-2 text-gray-600">Loading reviews...</p>
         </div>
       </div>
@@ -27,14 +27,14 @@ const StudentReviews: React.FC<StudentReviewsProps> = ({ reviews, loading }) => 
           {reviews.map((review) => (
             <div key={review._id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
               {/* Review Header */}
-              <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
+              <div className="bg-gradient-to-r from-emerald-600 to-teal-700 p-6 text-white">
                 <div className="flex items-center">
                   <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-full flex items-center justify-center text-white font-bold text-lg">
                     {review.userEmail[0].toUpperCase()}
                   </div>
                   <div className="ml-4">
                     <h3 className="font-bold text-lg">{review.userEmail.split('@')[0]}</h3>
-                    <p className="text-blue-100 text-sm">{review.collegeId?.name || 'College'}</p>
+                    <p className="text-emerald-100 text-sm">{review.collegeId?.name || 'College'}</p>
                   </div>
                 </div>
               </div>

@@ -45,7 +45,7 @@ const ProfileDropdown: React.FC = () => {
     return (
       <a
         href="/login"
-        className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
+        className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white px-6 py-2 rounded-lg font-medium hover:from-emerald-700 hover:to-teal-800 transition-all duration-200 transform hover:scale-105"
       >
         Login
       </a>
@@ -56,18 +56,18 @@ const ProfileDropdown: React.FC = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 text-white rounded-full flex items-center justify-center font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+        className="w-10 h-10 bg-gradient-to-br from-emerald-600 to-teal-700 text-white rounded-full flex items-center justify-center font-semibold hover:from-emerald-700 hover:to-teal-800 transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
       >
         {getInitials()}
       </button>
 
       {isOpen && (
         <div className="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden">
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-3">
+          <div className="bg-gradient-to-r from-emerald-600 to-teal-700 px-4 py-3">
             <p className="text-sm font-semibold text-white truncate">
               {user.displayName || user.email}
             </p>
-            <p className="text-xs text-blue-100 truncate">
+            <p className="text-xs text-emerald-100 truncate">
               {user.email}
             </p>
           </div>

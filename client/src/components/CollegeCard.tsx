@@ -38,7 +38,7 @@ const CollegeCard: React.FC<CollegeCardProps> = ({
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Rating:</span>
-              <span className="font-semibold text-blue-600">
+              <span className="font-semibold text-emerald-600">
                 {college.rating > 0 ? `${college.rating}★` : 'Not Rated'}
               </span>
             </div>
@@ -53,13 +53,13 @@ const CollegeCard: React.FC<CollegeCardProps> = ({
           <div className="space-y-2">
             <Link
               to={`/admission?college=${college._id}`}
-              className="block w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 text-center"
+              className="block w-full bg-emerald-600 text-white py-2 rounded-lg hover:bg-emerald-700 text-center font-medium"
             >
               Apply Now
             </Link>
             <Link
               to={`/colleges/${college._id}`}
-              className="block w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 text-center"
+              className="block w-full bg-slate-700 text-white py-2 rounded-lg hover:bg-slate-800 text-center font-medium"
             >
               View Details
             </Link>

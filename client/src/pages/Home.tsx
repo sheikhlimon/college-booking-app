@@ -80,7 +80,7 @@ const Home: React.FC = () => {
                 {/* Admission Date */}
                 <div className="mb-3">
                   <span className="text-sm text-gray-600">Admission: </span>
-                  <span className="text-sm font-semibold text-blue-600">{college.admissionDate}</span>
+                  <span className="text-sm font-semibold text-emerald-600">{college.admissionDate}</span>
                 </div>
 
                 {/* Events */}
@@ -100,9 +100,9 @@ const Home: React.FC = () => {
 
                 {/* Research & Sports */}
                 <div className="grid grid-cols-2 gap-3 mb-4">
-                  <div className="bg-blue-50 rounded-lg p-3 text-center">
-                    <p className="text-lg font-bold text-blue-800">{college.researchCount}</p>
-                    <p className="text-xs text-blue-600">Research Papers</p>
+                  <div className="bg-emerald-50 rounded-lg p-3 text-center">
+                    <p className="text-lg font-bold text-emerald-800">{college.researchCount}</p>
+                    <p className="text-xs text-emerald-600">Research Papers</p>
                   </div>
                   <div className="bg-green-50 rounded-lg p-3 text-center">
                     <p className="text-lg font-bold text-green-800">{college.sports.length}</p>
@@ -146,7 +146,7 @@ const Home: React.FC = () => {
                 <div className="flex space-x-3">
                   <a
                     href={`/colleges/${college._id}`}
-                    className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-center font-medium"
+                    className="flex-1 bg-slate-700 text-white py-2 px-4 rounded-lg hover:bg-slate-800 transition-colors text-center font-medium"
                   >
                     View Details
                   </a>

@@ -19,22 +19,22 @@ const Footer: React.FC = () => {
             <h4 className="text-lg font-semibold text-gray-900 mb-4">Quick Links</h4>
             <ul className="space-y-2">
               <li>
-                <a href="/" className="text-gray-600 hover:text-blue-600 transition-colors">
+                <a href="/" className="text-gray-600 hover:text-emerald-600 transition-colors">
                   Home
                 </a>
               </li>
               <li>
-                <a href="/colleges" className="text-gray-600 hover:text-blue-600 transition-colors">
+                <a href="/colleges" className="text-gray-600 hover:text-emerald-600 transition-colors">
                   All Colleges
                 </a>
               </li>
               <li>
-                <a href="/admission" className="text-gray-600 hover:text-blue-600 transition-colors">
+                <a href="/admission" className="text-gray-600 hover:text-emerald-600 transition-colors">
                   Admission
                 </a>
               </li>
               <li>
-                <a href="/my-college" className="text-gray-600 hover:text-blue-600 transition-colors">
+                <a href="/my-college" className="text-gray-600 hover:text-emerald-600 transition-colors">
                   My College
                 </a>
               </li>
@@ -46,22 +46,22 @@ const Footer: React.FC = () => {
             <h4 className="text-lg font-semibold text-gray-900 mb-4">Resources</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors">
+                <a href="#" className="text-gray-600 hover:text-emerald-600 transition-colors">
                   College Guide
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors">
+                <a href="#" className="text-gray-600 hover:text-emerald-600 transition-colors">
                   Admission Process
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors">
+                <a href="#" className="text-gray-600 hover:text-emerald-600 transition-colors">
                   Scholarships
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors">
+                <a href="#" className="text-gray-600 hover:text-emerald-600 transition-colors">
                   Career Guidance
                 </a>
               </li>
@@ -87,13 +87,13 @@ const Footer: React.FC = () => {
               © 2025 College Booking. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <a href="#" className="text-gray-500 hover:text-blue-600 transition-colors">
+              <a href="#" className="text-gray-500 hover:text-emerald-600 transition-colors">
                 Privacy Policy
               </a>
-              <a href="#" className="text-gray-500 hover:text-blue-600 transition-colors">
+              <a href="#" className="text-gray-500 hover:text-emerald-600 transition-colors">
                 Terms of Service
               </a>
-              <a href="#" className="text-gray-500 hover:text-blue-600 transition-colors">
+              <a href="#" className="text-gray-500 hover:text-emerald-600 transition-colors">
                 Cookie Policy
               </a>
             </div>
