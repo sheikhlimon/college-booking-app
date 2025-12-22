@@ -32,7 +32,7 @@ const Admission: React.FC = () => {
       const data = await getColleges();
       setColleges(data);
       setCollegesLoading(false);
-    } catch (error) {
+    } catch {
       setError('Failed to load colleges');
       setCollegesLoading(false);
     }
@@ -45,7 +45,7 @@ const Admission: React.FC = () => {
       if (college) {
         setSelectedCollege(college);
       }
-    } catch (error) {
+    } catch {
       setError('Failed to load college');
     }
   };
@@ -84,8 +84,9 @@ const Admission: React.FC = () => {
         navigate('/my-college');
       }, 2000);
 
-    } catch (error: any) {
-      setError(error.message || 'Failed to submit application');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to submit application';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

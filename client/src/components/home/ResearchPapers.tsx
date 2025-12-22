@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BookOpen } from 'lucide-react';
 import SectionTitle from '../shared/SectionTitle';
 import PaperCard from '../shared/PaperCard';
@@ -14,11 +14,7 @@ const ResearchPapers: React.FC = () => {
 
   const categories = ['All', 'Artificial Intelligence', 'Quantum Computing', 'Business Strategy'];
 
-  useEffect(() => {
-    fetchPapers();
-  }, [selectedCategory]);
-
-  const fetchPapers = async () => {
+  const fetchPapers = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -31,7 +27,11 @@ const ResearchPapers: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedCategory]);
+
+  useEffect(() => {
+    fetchPapers();
+  }, [fetchPapers]);
 
   if (loading) {
     return (

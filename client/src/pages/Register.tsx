@@ -43,8 +43,9 @@ const Register: React.FC = () => {
       await register(email, password);
       setSuccess('Registration successful! Redirecting to home...');
       // Registration successful - useEffect will handle redirect
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -57,8 +58,9 @@ const Register: React.FC = () => {
     try {
       await loginWithGoogle();
       // Google registration successful - useEffect will handle redirect
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

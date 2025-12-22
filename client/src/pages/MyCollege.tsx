@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FileText, Star } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { submitReview, getColleges, getUserAdmissions, type College } from '../services/api';
+import { submitReview, getColleges, getUserAdmissions, type College, type Admission } from '../services/api';
 import EmptyState from '../components/shared/EmptyState';
 import SectionTitle from '../components/shared/SectionTitle';
 import AdmissionCard from '../components/shared/AdmissionCard';
@@ -14,7 +14,7 @@ const MyCollege: React.FC = () => {
   const [success, setSuccess] = useState('');
   const [colleges, setColleges] = useState<College[]>([]);
   const [selectedCollege, setSelectedCollege] = useState('');
-  const [userAdmissions, setUserAdmissions] = useState<any[]>([]);
+  const [userAdmissions, setUserAdmissions] = useState<Admission[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,9 +63,10 @@ const MyCollege: React.FC = () => {
       });
 
       setSuccess('Review submitted successfully!');
-    } catch (error: any) {
+    } catch (error) {
       console.error('Review submission error:', error);
-      setError(error.response?.data?.message || 'Failed to submit review');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to submit review';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

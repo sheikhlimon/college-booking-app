@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BookOpen } from 'lucide-react';
 import InfoCard from './InfoCard';
 import PaperCard from '../shared/PaperCard';
@@ -16,11 +16,7 @@ const ResearchWorks: React.FC<ResearchWorksProps> = ({ collegeId, researchCount 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchPapers();
-  }, [collegeId]);
-
-  const fetchPapers = async () => {
+  const fetchPapers = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -32,7 +28,11 @@ const ResearchWorks: React.FC<ResearchWorksProps> = ({ collegeId, researchCount 
     } finally {
       setLoading(false);
     }
-  };
+  }, [collegeId]);
+
+  useEffect(() => {
+    fetchPapers();
+  }, [fetchPapers]);
 
   return (
     <InfoCard title="Research Works">

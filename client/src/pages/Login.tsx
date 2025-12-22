@@ -27,8 +27,9 @@ const Login: React.FC = () => {
     try {
       await login(email, password);
       // Login successful - useEffect will handle redirect
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -41,8 +42,9 @@ const Login: React.FC = () => {
     try {
       await loginWithGoogle();
       // Google login successful - useEffect will handle redirect
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -60,8 +62,9 @@ const Login: React.FC = () => {
     try {
       await resetPassword(email);
       setSuccess('Password reset email sent! Check your inbox.');
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
