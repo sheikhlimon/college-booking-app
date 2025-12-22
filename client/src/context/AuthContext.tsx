@@ -6,7 +6,8 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   GoogleAuthProvider,
-  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   sendPasswordResetEmail,
 } from "firebase/auth";
 
@@ -33,6 +34,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
       setUser(firebaseUser);
+    });
+
+    // Handle redirect result from Google login
+    getRedirectResult(auth).catch((error) => {
+      // Ignore "auth/popup-closed-by-user" and similar errors
+      if (error.code !== 'auth/popup-closed-by-user') {
+        console.error("Redirect result error:", error);
+      }
     });
 
     // Cleanup when component unmounts
@@ -63,7 +72,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const loginWithGoogle = async () => {
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      await signInWithRedirect(auth, provider);
     } catch (error) {
       console.error("Google login error:", error);
       throw error;
