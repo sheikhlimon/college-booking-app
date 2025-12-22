@@ -6,8 +6,7 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   GoogleAuthProvider,
-  signInWithRedirect,
-  getRedirectResult,
+  signInWithPopup,
   sendPasswordResetEmail,
 } from "firebase/auth";
 
@@ -39,21 +38,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setUser(firebaseUser);
     });
 
-    // Handle redirect result from Google login
-    getRedirectResult(auth)
-      .then((result) => {
-        console.log("Redirect result received:", result);
-        if (result?.user) {
-          console.log("Google login successful:", result.user.email);
-          setUser(result.user);
-        } else {
-          console.log("No redirect result (not returning from Google auth)");
-        }
-      })
-      .catch((error) => {
-        console.error("Redirect result error:", error.code, error.message);
-      });
-
     // Cleanup when component unmounts
     return unsubscribe;
   }, []);
@@ -81,12 +65,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // Google login function
   const loginWithGoogle = async () => {
     try {
-      console.log("Starting Google login...");
       const provider = new GoogleAuthProvider();
       provider.addScope('profile');
       provider.addScope('email');
-      await signInWithRedirect(auth, provider);
-      console.log("Redirect initiated");
+      await signInWithPopup(auth, provider);
     } catch (error) {
       console.error("Google login error:", error);
       throw error;
