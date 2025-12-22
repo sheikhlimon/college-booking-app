@@ -37,12 +37,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     });
 
     // Handle redirect result from Google login
-    getRedirectResult(auth).catch((error) => {
-      // Ignore "auth/popup-closed-by-user" and similar errors
-      if (error.code !== 'auth/popup-closed-by-user') {
-        console.error("Redirect result error:", error);
-      }
-    });
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result?.user) {
+          console.log("Google login successful:", result.user);
+          setUser(result.user);
+        }
+      })
+      .catch((error) => {
+        // Ignore specific errors
+        if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/redirect-cancelled-by-user') {
+          console.error("Redirect result error:", error);
+        }
+      });
 
     // Cleanup when component unmounts
     return unsubscribe;
@@ -71,8 +78,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // Google login function
   const loginWithGoogle = async () => {
     try {
+      console.log("Starting Google login...");
       const provider = new GoogleAuthProvider();
+      provider.addScope('profile');
+      provider.addScope('email');
       await signInWithRedirect(auth, provider);
+      console.log("Redirect initiated");
     } catch (error) {
       console.error("Google login error:", error);
       throw error;
