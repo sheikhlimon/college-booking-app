@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
-import { Chrome } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
 import AlertMessage from '../components/shared/AlertMessage';
+import Card from '../components/shared/Card';
+import FormField from '../components/shared/FormField';
+import Button from '../components/Button';
+import GoogleIconButton from '../components/shared/GoogleIconButton';
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -11,41 +14,66 @@ const Register: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<{
+    email?: string;
+    password?: string;
+    confirmPassword?: string;
+  }>({});
   const { register, loginWithGoogle, user } = useAuth();
   const navigate = useNavigate();
 
-  // Redirect if already logged in
   useEffect(() => {
-    if (user) {
-      navigate('/');
-    }
+    if (user) navigate('/');
   }, [user, navigate]);
+
+  const validateForm = () => {
+    const errors: { email?: string; password?: string; confirmPassword?: string } = {};
+
+    if (!email) {
+      errors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errors.email = 'Invalid email format';
+    }
+
+    if (!password) {
+      errors.password = 'Password is required';
+    } else if (password.length < 6) {
+      errors.password = 'Password must be at least 6 characters';
+    }
+
+    if (!confirmPassword) {
+      errors.confirmPassword = 'Please confirm your password';
+    } else if (password !== confirmPassword) {
+      errors.confirmPassword = 'Passwords do not match';
+    }
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
+
     setLoading(true);
     setError('');
-
-    // Password validation
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters long');
-      setLoading(false);
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      setLoading(false);
-      return;
-    }
+    setFieldErrors({});
 
     try {
       await register(email, password);
-      setSuccess('Registration successful! Redirecting to home...');
-      // Registration successful - useEffect will handle redirect
+      setSuccess('Registration successful! Redirecting...');
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'An error occurred';
-      setError(errorMessage);
+      const message = error instanceof Error ? error.message : 'An error occurred';
+      if (message.includes('email-already-in-use')) {
+        setFieldErrors({ email: 'An account with this email already exists' });
+      } else if (message.includes('weak-password')) {
+        setFieldErrors({ password: 'Password is too weak' });
+      } else if (message.includes('invalid-email')) {
+        setFieldErrors({ email: 'Invalid email address' });
+      } else {
+        setError(message);
+      }
     } finally {
       setLoading(false);
     }
@@ -54,113 +82,88 @@ const Register: React.FC = () => {
   const handleGoogleRegister = async () => {
     setLoading(true);
     setError('');
-
     try {
       await loginWithGoogle();
-      // Google registration successful - useEffect will handle redirect
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'An error occurred';
-      setError(errorMessage);
+      setError(error instanceof Error ? error.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create your College Booking account
-          </h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-50 px-4">
+      <div className="max-w-md w-full">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Create Account</h1>
+          <p className="text-gray-600">Sign up to get started with College Booking</p>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <Card>
           {error && <AlertMessage type="error" message={error} />}
           {success && <AlertMessage type="success" message={success} />}
 
-          <div className="space-y-4">
-            <div>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <FormField
+              label="Email"
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              error={fieldErrors.email}
+            />
 
-            <div>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Password (min 6 characters)"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
+            <FormField
+              label="Password"
+              name="password"
+              type="password"
+              placeholder="••••••••"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              error={fieldErrors.password}
+            />
 
-            <div>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                required
-                className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-            </div>
-          </div>
+            <FormField
+              label="Confirm Password"
+              name="confirmPassword"
+              type="password"
+              placeholder="••••••••"
+              required
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              error={fieldErrors.confirmPassword}
+            />
 
-          <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
-            >
-              {loading ? 'Creating account...' : 'Sign up'}
-            </button>
-          </div>
+            <Button type="submit" disabled={loading} className="w-full">
+              {loading ? 'Creating account...' : 'Sign Up'}
+            </Button>
 
-          <div className="text-center">
-            <span className="text-gray-600">Already have an account? </span>
-            <a href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
-              Sign in
-            </a>
-          </div>
-        </form>
-
-        {/* Google Registration - We'll implement this next */}
-        <div className="mt-6">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300" />
+            <div className="text-center text-sm text-gray-600">
+              Already have an account?{' '}
+              <Link to="/login" className="font-medium text-emerald-600 hover:text-emerald-700">
+                Sign in
+              </Link>
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-gray-50 text-gray-500">Or continue with</span>
-            </div>
-          </div>
+          </form>
 
           <div className="mt-6">
-            <button
-              type="button"
-              onClick={handleGoogleRegister}
-              disabled={loading}
-              className="w-full flex justify-center items-center gap-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
-            >
-              <Chrome className="w-5 h-5" />
-              Continue with Google
-            </button>
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white text-gray-500">Or continue with</span>
+              </div>
+            </div>
+
+            <div className="mt-5">
+              <GoogleIconButton onClick={handleGoogleRegister} disabled={loading} loading={loading} />
+            </div>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

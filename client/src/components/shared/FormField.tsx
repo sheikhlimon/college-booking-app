@@ -8,6 +8,7 @@ interface FormFieldProps {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
+  error?: string;
 }
 
 const FormField: React.FC<FormFieldProps> = ({
@@ -19,7 +20,8 @@ const FormField: React.FC<FormFieldProps> = ({
   className = '',
   value,
   onChange,
-  disabled = false
+  disabled = false,
+  error
 }) => {
   return (
     <div className={className}>
@@ -34,9 +36,14 @@ const FormField: React.FC<FormFieldProps> = ({
         value={value}
         onChange={onChange}
         disabled={disabled}
-        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:bg-gray-100 disabled:text-gray-500"
+        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 disabled:bg-gray-100 disabled:text-gray-500 ${
+          error
+            ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
+            : 'border-gray-300 focus:ring-emerald-500 focus:border-emerald-500'
+        }`}
         placeholder={placeholder}
       />
+      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
     </div>
   );
 };
