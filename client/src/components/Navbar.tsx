@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import ProfileDropdown from './ProfileDropdown';
 
 const Navbar: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   return (
     <nav className="bg-blue-600 text-white">
@@ -22,31 +23,15 @@ const Navbar: React.FC = () => {
                 Colleges
               </Link>
               {user && (
-                <>
-                  <Link to="/admission" className="hover:text-blue-200 transition-colors">
-                    Admission
-                  </Link>
-                  <Link to="/profile" className="hover:text-blue-200 transition-colors">
-                    Profile
-                  </Link>
-                </>
+                <Link to="/admission" className="hover:text-blue-200 transition-colors">
+                  Admission
+                </Link>
               )}
             </div>
           </div>
 
-          <div className="flex items-center space-x-4">
-            {user ? (
-              <button
-                onClick={logout}
-                className="bg-white text-blue-600 px-4 py-2 rounded hover:bg-blue-50 transition-colors"
-              >
-                Logout
-              </button>
-            ) : (
-              <Link to="/login" className="bg-white text-blue-600 px-4 py-2 rounded hover:bg-blue-50 transition-colors">
-                Login
-              </Link>
-            )}
+          <div className="flex items-center">
+            <ProfileDropdown />
           </div>
         </div>
       </div>
