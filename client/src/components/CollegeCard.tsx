@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { type College } from '../services/api';
+import Button from './Button';
 
 interface CollegeCardProps {
   college: College;
@@ -46,22 +47,32 @@ const CollegeCard: React.FC<CollegeCardProps> = ({
               <span className="text-gray-600">Research:</span>
               <span className="font-semibold">{college.researchCount} papers</span>
             </div>
+            {college.sports && college.sports.length > 0 && (
+              <div className="flex justify-between">
+                <span className="text-gray-600">Sports:</span>
+                <span className="font-semibold">{college.sports.length} facilities</span>
+              </div>
+            )}
+            {college.events && college.events.length > 0 && (
+              <div className="flex justify-between">
+                <span className="text-gray-600">Events:</span>
+                <span className="font-semibold">{college.events.length} upcoming</span>
+              </div>
+            )}
           </div>
         )}
 
         {showActions && (
-          <div className="space-y-2">
-            <Link
-              to={`/admission?college=${college._id}`}
-              className="block w-full bg-emerald-600 text-white py-2 rounded-lg hover:bg-emerald-700 text-center font-medium"
-            >
-              Apply Now
+          <div className="space-y-3">
+            <Link to={`/admission?college=${college._id}`} className="block">
+              <Button className="w-full justify-center">
+                Apply Now
+              </Button>
             </Link>
-            <Link
-              to={`/colleges/${college._id}`}
-              className="block w-full bg-slate-700 text-white py-2 rounded-lg hover:bg-slate-800 text-center font-medium"
-            >
-              View Details
+            <Link to={`/colleges/${college._id}`} className="block">
+              <Button variant="outline" className="w-full justify-center">
+                View Details
+              </Button>
             </Link>
           </div>
         )}

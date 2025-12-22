@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { submitReview } from '../services/api';
+import { submitReview, getColleges, getUserAdmissions, type College } from '../services/api';
+import Button from '../components/Button';
 
 const MyCollege: React.FC = () => {
   const { user } = useAuth();
@@ -9,6 +10,36 @@ const MyCollege: React.FC = () => {
   const [comment, setComment] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [colleges, setColleges] = useState<College[]>([]);
+  const [selectedCollege, setSelectedCollege] = useState('');
+  const [userAdmissions, setUserAdmissions] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [collegesData, admissionsData] = await Promise.all([
+          getColleges(),
+          user?.email ? getUserAdmissions(user.email) : Promise.resolve([])
+        ]);
+        setColleges(collegesData);
+        setUserAdmissions(admissionsData);
+
+        // Set default college to first available or first admission
+        if (admissionsData.length > 0 && admissionsData[0].collegeId) {
+          const collegeId = typeof admissionsData[0].collegeId === 'object'
+            ? admissionsData[0].collegeId._id
+            : admissionsData[0].collegeId;
+          setSelectedCollege(collegeId);
+        } else if (collegesData.length > 0) {
+          setSelectedCollege(collegesData[0]._id);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [user?.email]);
 
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,8 +48,13 @@ const MyCollege: React.FC = () => {
     setSuccess('');
 
     try {
+      if (!selectedCollege) {
+        setError('Please select a college');
+        return;
+      }
+
       await submitReview({
-        collegeId: 'college-id-placeholder', // Would come from admission data
+        collegeId: selectedCollege,
         userEmail: user?.email || '',
         rating,
         comment
@@ -28,7 +64,8 @@ const MyCollege: React.FC = () => {
       setRating(5);
       setComment('');
     } catch (error: any) {
-      setError('Failed to submit review');
+      console.error('Review submission error:', error);
+      setError(error.response?.data?.message || 'Failed to submit review');
     } finally {
       setLoading(false);
     }
@@ -56,40 +93,61 @@ const MyCollege: React.FC = () => {
           {/* Admission Info */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold mb-4">My Applications</h2>
-            <div className="border rounded-lg p-4">
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="font-semibold">Tech Institute</h3>
-                <span className="px-3 py-1 text-sm rounded-full bg-green-100 text-green-800">
-                  Accepted
-                </span>
+            {userAdmissions.length > 0 ? (
+              <div className="space-y-4">
+                {userAdmissions.map((admission) => {
+                  const college = typeof admission.collegeId === 'object' ? admission.collegeId : null;
+                  return (
+                    <div key={admission._id} className="border rounded-lg p-4 bg-gray-50">
+                      <div className="flex justify-between items-start mb-3">
+                        <div>
+                          <h3 className="font-semibold text-lg">
+                            {college?.name || 'College'}
+                          </h3>
+                          <p className="text-gray-600">Program: {admission.subject}</p>
+                        </div>
+                        <span className="px-3 py-1 text-sm rounded-full bg-yellow-100 text-yellow-800">
+                          Under Review
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <span className="text-gray-600">Applied:</span>
+                          <p className="font-medium">{new Date(admission.createdAt).toLocaleDateString()}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-600">Email:</span>
+                          <p className="font-medium">{admission.email}</p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-              <p className="text-gray-600 mb-2">Applied on: {new Date().toLocaleDateString()}</p>
-              <p className="text-gray-600">Program: Computer Science</p>
-            </div>
+            ) : (
+              <div className="border rounded-lg p-4 text-center">
+                <p className="text-gray-600 mb-4">No applications found.</p>
+                <Button href="/admission">
+                  Apply to a College
+                </Button>
+              </div>
+            )}
           </div>
 
-          {/* College Details */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">College Details</h2>
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-gray-600">College:</span>
-                <span className="font-medium">Tech Institute</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Program:</span>
-                <span className="font-medium">Computer Science</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Duration:</span>
-                <span className="font-medium">4 years</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Email:</span>
-                <span className="font-medium">{user?.email}</span>
+          {/* Available Colleges */}
+          {colleges.length > 0 && (
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-semibold mb-4">Available Colleges</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {colleges.slice(0, 4).map((college) => (
+                  <div key={college._id} className="text-sm">
+                    <p className="font-medium">{college.name}</p>
+                    <p className="text-gray-600">Rating: {college.rating}★</p>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Sidebar */}
@@ -98,6 +156,25 @@ const MyCollege: React.FC = () => {
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-lg font-semibold mb-4">Write a Review</h2>
             <form onSubmit={handleReviewSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  College
+                </label>
+                <select
+                  value={selectedCollege}
+                  onChange={(e) => setSelectedCollege(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                >
+                  <option value="">Select a college</option>
+                  {colleges.map((college) => (
+                    <option key={college._id} value={college._id}>
+                      {college.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Rating
@@ -129,13 +206,13 @@ const MyCollege: React.FC = () => {
                 />
               </div>
 
-              <button
+              <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+                className="w-full justify-center"
               >
                 {loading ? 'Submitting...' : 'Submit Review'}
-              </button>
+              </Button>
             </form>
           </div>
 

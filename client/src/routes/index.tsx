@@ -16,11 +16,7 @@ const AppRoutes: React.FC = () => {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/colleges" element={<Colleges />} />
-      <Route path="/colleges/:id" element={
-        <PrivateRoute>
-          <CollegeDetails />
-        </PrivateRoute>
-      } />
+      <Route path="/colleges/:id" element={<CollegeDetails />} />
       <Route path="/admission" element={
         <PrivateRoute>
           <Admission />

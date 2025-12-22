@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import Button from './Button';
 
 const ProfileDropdown: React.FC = () => {
   const { user, logout } = useAuth();
@@ -43,12 +44,9 @@ const ProfileDropdown: React.FC = () => {
 
   if (!user) {
     return (
-      <a
-        href="/login"
-        className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white px-6 py-2 rounded-lg font-medium hover:from-emerald-700 hover:to-teal-800 transition-all duration-200 transform hover:scale-105"
-      >
+      <Button href="/login" size="sm">
         Login
-      </a>
+      </Button>
     );
   }
 

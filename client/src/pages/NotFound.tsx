@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Button from '../components/Button';
 
 const NotFound: React.FC = () => {
   return (
@@ -24,18 +24,12 @@ const NotFound: React.FC = () => {
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link
-            to="/"
-            className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white px-6 py-3 rounded-xl font-medium hover:from-emerald-700 hover:to-teal-800 transition-all duration-200 transform hover:scale-105 shadow-lg"
-          >
+          <Button href="/" size="lg">
             Back to Home
-          </Link>
-          <Link
-            to="/colleges"
-            className="bg-white text-gray-700 px-6 py-3 rounded-xl font-medium border-2 border-gray-300 hover:border-emerald-600 hover:text-emerald-600 transition-all duration-200 shadow-md"
-          >
+          </Button>
+          <Button href="/colleges" variant="outline" size="lg">
             Browse Colleges
-          </Link>
+          </Button>
         </div>
       </div>
     </div>

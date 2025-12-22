@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getCollegeById, type College } from '../services/api';
+import InfoCard from '../components/college-details/InfoCard';
+import Gallery from '../components/college-details/Gallery';
+import ActionButtons from '../components/college-details/ActionButtons';
+import SportsFacilities from '../components/college-details/SportsFacilities';
+import ResearchWorks from '../components/college-details/ResearchWorks';
+import Events from '../components/college-details/Events';
 
 const CollegeDetails: React.FC = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [college, setCollege] = useState<College | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -31,7 +36,7 @@ const CollegeDetails: React.FC = () => {
     return (
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading college details...</p>
         </div>
       </div>
@@ -70,93 +75,59 @@ const CollegeDetails: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
           {/* Admission Info */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Admission Information</h2>
-            <p className="text-gray-700 mb-4">
-              <strong>Admission Date:</strong> {college.admissionDate}
-            </p>
-          </div>
-
-          {/* Events */}
-          {college.events && college.events.length > 0 && (
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Upcoming Events</h2>
-              <div className="space-y-3">
-                {college.events.map((event, index) => (
-                  <div key={index} className="border-l-4 border-blue-600 pl-4 py-2">
-                    <h3 className="font-semibold">{event}</h3>
-                  </div>
-                ))}
+          <InfoCard title="Admission Process">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 bg-emerald-50 rounded-lg">
+                <div>
+                  <h3 className="font-semibold text-lg text-emerald-800">Next Admission Date</h3>
+                  <p className="text-emerald-600">{college.admissionDate}</p>
+                </div>
+                <svg className="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div className="space-y-2">
+                <h4 className="font-semibold text-gray-900">Admission Requirements:</h4>
+                <ul className="space-y-1 text-gray-700">
+                  <li>• High school diploma or equivalent</li>
+                  <li>• Minimum GPA of 3.0</li>
+                  <li>• Entrance exam scores</li>
+                  <li>• Letters of recommendation</li>
+                  <li>• Personal statement</li>
+                </ul>
               </div>
             </div>
-          )}
+          </InfoCard>
 
-          {/* Sports */}
-          {college.sports && college.sports.length > 0 && (
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Sports Facilities</h2>
-              <div className="grid grid-cols-2 gap-3">
-                {college.sports.map((sport, index) => (
-                  <div key={index} className="bg-blue-50 rounded p-3 text-center">
-                    <p className="font-medium text-blue-800">{sport}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          <Events events={college.events || []} />
+          <SportsFacilities sports={college.sports || []} />
+          <ResearchWorks researchCount={college.researchCount} />
 
-          {/* Gallery */}
           {college.gallery && college.gallery.length > 0 && (
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Campus Gallery</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {college.gallery.slice(0, 6).map((image, index) => (
-                  <div key={index} className="aspect-square bg-gray-200 rounded-lg overflow-hidden">
-                    {image ? (
-                      <img
-                        src={image}
-                        alt={`Gallery ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-500">
-                        Image {index + 1}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
+            <Gallery images={college.gallery} />
           )}
         </div>
 
         {/* Sidebar */}
         <div className="space-y-6">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="font-bold text-lg mb-4">Apply Now</h3>
-            <div className="space-y-3">
-              <button
-                onClick={() => navigate(`/admission?college=${college._id}`)}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700"
-              >
-                Apply for Admission
-              </button>
-              <button className="w-full border border-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-50">
-                Download Brochure
-              </button>
-            </div>
-          </div>
+          <ActionButtons collegeId={college._id} />
 
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="font-bold text-lg mb-4">Sports</h3>
-            <div className="space-y-2">
-              {college.sports.map((sport, index) => (
-                <div key={index} className="text-gray-700">
-                  • {sport}
-                </div>
-              ))}
+          <InfoCard title="Quick Info">
+            <div className="space-y-3">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Research Papers:</span>
+                <span className="font-semibold">{college.researchCount}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Sports Facilities:</span>
+                <span className="font-semibold">{college.sports?.length || 0}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Upcoming Events:</span>
+                <span className="font-semibold">{college.events?.length || 0}</span>
+              </div>
             </div>
-          </div>
+          </InfoCard>
         </div>
       </div>
     </div>
