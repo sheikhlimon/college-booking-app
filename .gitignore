@@ -13,3 +13,8 @@ pnpm-debug.log*
 # Vite
 client/dist
 
+# Learning documentation (local only)
+ARCHITECTURE.md
+REACT_CONCEPTS.md
+BACKEND_CONCEPTS.md
+PROJECT_INTERVIEW_QUESTIONS.md

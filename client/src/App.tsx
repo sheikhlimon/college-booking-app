@@ -8,7 +8,7 @@ function App() {
     <BrowserRouter>
       <div className="min-h-screen bg-white flex flex-col">
         <Navbar />
-        <main className="flex-grow container mx-auto">
+        <main className="flex-grow py-12">
           <AppRoutes />
         </main>
         <Footer />

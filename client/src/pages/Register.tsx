@@ -92,14 +92,14 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-white px-4">
       <div className="max-w-md w-full">
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">Create Account</h1>
-          <p className="text-gray-600">Sign up to get started with College Booking</p>
+          <p className="text-gray-600">Join to find your perfect college</p>
         </div>
 
-        <Card>
+        <Card className="border-t-4 border-t-emerald-600">
           {error && <AlertMessage type="error" message={error} />}
           {success && <AlertMessage type="success" message={success} />}
 
