@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import AlertMessage from '../components/shared/AlertMessage';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -76,16 +77,8 @@ const Login: React.FC = () => {
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-              {error}
-            </div>
-          )}
-          {success && (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-              {success}
-            </div>
-          )}
+          {error && <AlertMessage type="error" message={error} />}
+          {success && <AlertMessage type="success" message={success} />}
 
           <div className="rounded-md shadow-sm -space-y-px">
             <div>

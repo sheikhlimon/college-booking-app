@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { updateUser } from '../services/api';
+import AlertMessage from '../components/shared/AlertMessage';
+import Card from '../components/shared/Card';
+import FormField from '../components/shared/FormField';
+import Button from '../components/Button';
 
 interface UserData {
   name?: string;
@@ -52,7 +56,6 @@ const Profile: React.FC = () => {
     setMessage('');
 
     try {
-      // Update user profile in backend
       await updateUser(userData.email || '', {
         name: userData.name,
         university: userData.university,
@@ -82,29 +85,24 @@ const Profile: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <div className="bg-white rounded-lg shadow-md">
+      <Card>
         <div className="p-6 border-b">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold">Profile</h1>
             {!isEditing && (
-              <button
-                onClick={handleEditToggle}
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
+              <Button onClick={handleEditToggle}>
                 Edit Profile
-              </button>
+              </Button>
             )}
           </div>
         </div>
 
         {message && (
-          <div className={`px-6 py-3 ${
-            message.includes('success')
-              ? 'bg-green-100 border border-green-400 text-green-700'
-              : 'bg-red-100 border border-red-400 text-red-700'
-          }`}>
-            {message}
-          </div>
+          <AlertMessage
+            type={message.includes('success') ? 'success' : 'error'}
+            message={message}
+            className="mx-6 mt-6"
+          />
         )}
 
         <div className="p-6">
@@ -144,59 +142,40 @@ const Profile: React.FC = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email *
-                  </label>
-                  <input
-                    type="email"
+                  <FormField
+                    label="Email *"
                     name="email"
+                    type="email"
                     value={userData.email}
                     onChange={handleInputChange}
                     disabled
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500"
+                    className="bg-gray-50 text-gray-500"
                   />
                   <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={userData.name}
-                    onChange={handleInputChange}
-                    placeholder="Enter your full name"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
+                <FormField
+                  label="Name"
+                  name="name"
+                  value={userData.name}
+                  onChange={handleInputChange}
+                  placeholder="Enter your full name"
+                />
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    University
-                  </label>
-                  <input
-                    type="text"
-                    name="university"
-                    value={userData.university}
-                    onChange={handleInputChange}
-                    placeholder="Your current university"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
+                <FormField
+                  label="University"
+                  name="university"
+                  value={userData.university}
+                  onChange={handleInputChange}
+                  placeholder="Your current university"
+                />
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    placeholder="Enter your phone number"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
+                <FormField
+                  label="Phone Number"
+                  name="phone"
+                  type="tel"
+                  placeholder="Enter your phone number"
+                />
               </div>
 
               <div>
@@ -209,30 +188,29 @@ const Profile: React.FC = () => {
                   value={userData.address}
                   onChange={handleInputChange}
                   placeholder="Enter your address"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
 
               <div className="flex justify-end space-x-4 pt-6 border-t">
-                <button
+                <Button
+                  variant="outline"
                   type="button"
                   onClick={handleCancel}
-                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500"
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
                   type="submit"
                   disabled={loading}
-                  className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
                 >
                   {loading ? 'Saving...' : 'Save Changes'}
-                </button>
+                </Button>
               </div>
             </form>
           )}
         </div>
-      </div>
+      </Card>
     </div>
   );
 };

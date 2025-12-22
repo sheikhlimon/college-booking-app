@@ -1,5 +1,7 @@
 import React from 'react';
 import { type Review } from '../../services/api';
+import LoadingSpinner from '../shared/LoadingSpinner';
+import Card from '../shared/Card';
 
 interface StudentReviewsProps {
   reviews: Review[];
@@ -12,7 +14,7 @@ const StudentReviews: React.FC<StudentReviewsProps> = ({ reviews, loading }) => 
       <div className="mb-12">
         <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Student Reviews</h2>
         <div className="text-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto"></div>
+          <LoadingSpinner />
           <p className="mt-2 text-gray-600">Loading reviews...</p>
         </div>
       </div>
@@ -76,11 +78,11 @@ const StudentReviews: React.FC<StudentReviewsProps> = ({ reviews, loading }) => 
           ))}
         </div>
       ) : (
-        <div className="text-center py-12 bg-white rounded-xl shadow-md">
+        <Card className="text-center py-12">
           <div className="text-6xl mb-4">⭐</div>
           <p className="text-gray-500 text-lg">No reviews yet.</p>
           <p className="text-gray-400 mt-2">Be the first to share your experience!</p>
-        </div>
+        </Card>
       )}
     </div>
   );
