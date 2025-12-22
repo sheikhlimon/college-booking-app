@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { submitReview, getColleges, getUserAdmissions, type College } from '../services/api';
 import Button from '../components/Button';
+import StarRating from '../components/shared/StarRating';
+import EmptyState from '../components/shared/EmptyState';
+import SectionTitle from '../components/shared/SectionTitle';
 
 const MyCollege: React.FC = () => {
   const { user } = useAuth();
@@ -73,7 +76,7 @@ const MyCollege: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">My College</h1>
+      <SectionTitle align="left">My College</SectionTitle>
 
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
@@ -125,12 +128,15 @@ const MyCollege: React.FC = () => {
                 })}
               </div>
             ) : (
-              <div className="border rounded-lg p-4 text-center">
-                <p className="text-gray-600 mb-4">No applications found.</p>
-                <Button href="/admission">
-                  Apply to a College
-                </Button>
-              </div>
+              <EmptyState
+                icon="📝"
+                title="No Applications Found"
+                message="You haven't applied to any colleges yet."
+                action={{
+                  label: 'Apply to a College',
+                  onClick: () => window.location.href = '/admission'
+                }}
+              />
             )}
           </div>
 
@@ -179,18 +185,12 @@ const MyCollege: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Rating
                 </label>
-                <div className="flex space-x-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      type="button"
-                      onClick={() => setRating(star)}
-                      className={`text-2xl ${star <= rating ? 'text-yellow-400' : 'text-gray-300'}`}
-                    >
-                      ★
-                    </button>
-                  ))}
-                </div>
+                <StarRating
+                  rating={rating}
+                  onRatingChange={setRating}
+                  readonly={false}
+                  size="lg"
+                />
               </div>
 
               <div>
