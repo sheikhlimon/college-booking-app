@@ -26,6 +26,7 @@ interface ImageGalleryProps {
   showCard?: boolean;
   cardClassName?: string;
   containerClassName?: string;
+  showCardHeader?: boolean;
 
   // Overlay
   showOverlay?: boolean;
@@ -52,6 +53,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
   showCard = false,
   cardClassName = 'bg-white rounded-lg shadow-md p-6',
   containerClassName = '',
+  showCardHeader = false,
   showOverlay = false,
   overlayOpacity = 'bg-opacity-30',
   title,
@@ -120,7 +122,12 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
 
   return (
     <div className={`${showCard ? cardClassName : ''} ${containerClassName}`}>
-      {showTitle && title && (
+      {showCardHeader && title && (
+        <div className="bg-gradient-to-r from-emerald-600 to-teal-700 px-6 py-4 -mx-6 -mt-6 mb-6 rounded-t-lg">
+          <h2 className="text-2xl font-bold text-white">{title}</h2>
+        </div>
+      )}
+      {showTitle && !showCardHeader && title && (
         <h2 className={titleClassName}>{title}</h2>
       )}
       {imageContent}

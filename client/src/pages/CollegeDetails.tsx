@@ -109,6 +109,7 @@ const CollegeDetails: React.FC = () => {
               images={college.gallery}
               title="Campus Gallery"
               showCard={true}
+              showCardHeader={true}
               gridCols={{ mobile: 'grid-cols-2', tablet: 'md:grid-cols-3' }}
               aspectRatio="aspect-square"
               showOverlay={false}

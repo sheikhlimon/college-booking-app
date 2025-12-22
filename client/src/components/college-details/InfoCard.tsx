@@ -1,5 +1,4 @@
 import React from 'react';
-import Card from '../shared/Card';
 
 interface InfoCardProps {
   title: string;
@@ -8,10 +7,14 @@ interface InfoCardProps {
 
 const InfoCard: React.FC<InfoCardProps> = ({ title, children }) => {
   return (
-    <Card variant="default">
-      <h2 className="text-2xl font-bold text-gray-900 mb-4">{title}</h2>
-      {children}
-    </Card>
+    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      <div className="bg-gradient-to-r from-emerald-600 to-teal-700 px-6 py-4">
+        <h2 className="text-2xl font-bold text-white">{title}</h2>
+      </div>
+      <div className="p-6">
+        {children}
+      </div>
+    </div>
   );
 };
 
