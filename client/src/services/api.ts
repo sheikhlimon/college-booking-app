@@ -60,6 +60,23 @@ export interface User {
   updatedAt: string;
 }
 
+export interface ResearchPaper {
+  _id: string;
+  collegeId: {
+    _id: string;
+    name: string;
+    image: string;
+  };
+  title: string;
+  authors: string[];
+  abstract?: string;
+  link: string;
+  category: string;
+  publishDate: string;
+  citations: number;
+  createdAt: string;
+}
+
 // API Functions
 
 // College endpoints
@@ -135,6 +152,44 @@ export const getAllReviews = async (): Promise<Review[]> => {
     return response.data;
   } catch (error) {
     console.error('Error fetching reviews:', error);
+    throw error;
+  }
+};
+
+// Research Paper endpoints
+export const getAllPapers = async (filters?: {
+  category?: string;
+  college?: string;
+}): Promise<ResearchPaper[]> => {
+  try {
+    const params = new URLSearchParams();
+    if (filters?.category) params.append('category', filters.category);
+    if (filters?.college) params.append('college', filters.college);
+
+    const response = await api.get(`/papers?${params.toString()}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching papers:', error);
+    throw error;
+  }
+};
+
+export const getPapersByCollege = async (collegeId: string): Promise<ResearchPaper[]> => {
+  try {
+    const response = await api.get(`/papers/college/${collegeId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching college papers:', error);
+    throw error;
+  }
+};
+
+export const getPaperById = async (id: string): Promise<ResearchPaper> => {
+  try {
+    const response = await api.get(`/papers/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching paper:', error);
     throw error;
   }
 };
