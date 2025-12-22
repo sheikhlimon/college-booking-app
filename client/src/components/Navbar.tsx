@@ -22,9 +22,14 @@ const Navbar: React.FC = () => {
                 Colleges
               </Link>
               {user && (
-                <Link to="/profile" className="hover:text-blue-200 transition-colors">
-                  Profile
-                </Link>
+                <>
+                  <Link to="/admission" className="hover:text-blue-200 transition-colors">
+                    Admission
+                  </Link>
+                  <Link to="/profile" className="hover:text-blue-200 transition-colors">
+                    Profile
+                  </Link>
+                </>
               )}
             </div>
           </div>

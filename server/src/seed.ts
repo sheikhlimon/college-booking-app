@@ -100,6 +100,10 @@ const seedColleges = async () => {
     await College.insertMany(colleges);
     console.log('Sample colleges added successfully!');
 
+    // Clear existing reviews (start with no reviews as per requirements)
+    await Review.deleteMany({});
+    console.log('Reviews cleared - starting with user-generated reviews only');
+
     // Close connection
     await mongoose.connection.close();
     console.log('Database connection closed');
