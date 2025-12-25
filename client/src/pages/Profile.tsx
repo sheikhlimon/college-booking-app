@@ -168,13 +168,6 @@ const Profile: React.FC = () => {
                   onChange={handleInputChange}
                   placeholder="Your current university"
                 />
-
-                <FormField
-                  label="Phone Number"
-                  name="phone"
-                  type="tel"
-                  placeholder="Enter your phone number"
-                />
               </div>
 
               <div>
