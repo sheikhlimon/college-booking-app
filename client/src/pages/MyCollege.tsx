@@ -6,10 +6,12 @@ import EmptyState from '../components/shared/EmptyState';
 import SectionTitle from '../components/shared/SectionTitle';
 import AdmissionCard from '../components/shared/AdmissionCard';
 import ReviewForm from '../components/shared/ReviewForm';
+import LoadingSpinner from '../components/shared/LoadingSpinner';
 
 const MyCollege: React.FC = () => {
   const { user } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [colleges, setColleges] = useState<College[]>([]);
@@ -18,6 +20,7 @@ const MyCollege: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setDataLoading(true);
       try {
         const [collegesData, admissionsData] = await Promise.all([
           getColleges(),
@@ -37,6 +40,9 @@ const MyCollege: React.FC = () => {
         }
       } catch (error) {
         console.error('Error fetching data:', error);
+      } finally {
+        setDataLoading(false);
+        setLoading(false);
       }
     };
 
@@ -76,19 +82,26 @@ const MyCollege: React.FC = () => {
     <div className="max-w-4xl mx-auto px-4 py-8">
       <SectionTitle align="left">My College</SectionTitle>
 
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-          {error}
+      {dataLoading ? (
+        <div className="text-center py-12">
+          <LoadingSpinner size="lg" />
+          <p className="mt-4 text-gray-600">Loading your college data...</p>
         </div>
-      )}
+      ) : (
+        <>
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+              {error}
+            </div>
+          )}
 
-      {success && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
-          {success}
-        </div>
-      )}
+          {success && (
+            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+              {success}
+            </div>
+          )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-8">
           {/* Admission Info */}
@@ -148,6 +161,8 @@ const MyCollege: React.FC = () => {
           />
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 };
