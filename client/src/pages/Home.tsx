@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { getAllReviews, getColleges, type Review, type College } from '../services/api';
-import CollegeCard from '../components/CollegeCard';
 import SearchSection from '../components/home/SearchSection';
-import ImageGallery from '../components/shared/ImageGallery';
+import FeaturedColleges from '../components/home/FeaturedColleges';
+import CollegeGallery from '../components/home/CollegeGallery';
 import ResearchPapers from '../components/home/ResearchPapers';
 import StudentReviews from '../components/home/StudentReviews';
 
@@ -54,33 +54,10 @@ const Home: React.FC = () => {
       </div>
 
       {/* Section 2: College Cards (3 with enhanced details) */}
-      <section className="mb-16">
-        <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">Featured Colleges</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredColleges.map((college) => (
-            <CollegeCard
-              key={college._id}
-              college={college}
-              showDetails={true}
-              showActions={true}
-            />
-          ))}
-        </div>
-      </section>
+      <FeaturedColleges colleges={filteredColleges} loading={loading} />
 
       {/* Section 3: College Image Gallery */}
-      <section className="mb-16">
-        <ImageGallery
-          colleges={allColleges}
-          title="Campus Life Gallery"
-          description="Experience the vibrant campus life and diverse community at our partner colleges"
-          gridCols={{ mobile: 'grid-cols-2', tablet: 'md:grid-cols-4', desktop: 'lg:grid-cols-6' }}
-          imageHeight="h-32"
-          showOverlay={true}
-          hoverScale="scale-110"
-          maxImages={6}
-        />
-      </section>
+      <CollegeGallery colleges={allColleges} />
 
       {/* Section 4: Research Papers */}
       <section className="mb-16">
