@@ -5,12 +5,19 @@ export const updateUserByEmail = async (req: Request, res: Response): Promise<vo
   try {
     // Extract email and update data
     const email = req.params.email;
-    const { name, university, address } = req.body;
+    const { name, email: newEmail, university, address } = req.body;
+
+    // Build update object with only provided fields
+    const updateData: any = { updatedAt: new Date() };
+    if (name !== undefined) updateData.name = name;
+    if (newEmail !== undefined) updateData.email = newEmail;
+    if (university !== undefined) updateData.university = university;
+    if (address !== undefined) updateData.address = address;
 
     // Case-insensitive lookup + update
     const updatedUser = await User.findOneAndUpdate(
       { email: email.toLowerCase() },
-      { name, university, address, updatedAt: new Date() },
+      updateData,
       { new: true, runValidators: true }
     );
 

@@ -1,14 +1,16 @@
-import axios from 'axios';
+import axios from "axios";
 
 // API Configuration
-const API_BASE_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api`;
+const API_BASE_URL = `${
+  import.meta.env.VITE_API_URL || "http://localhost:5000"
+}/api`;
 
 // Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -83,10 +85,10 @@ export interface ResearchPaper {
 // College endpoints
 export const getColleges = async (): Promise<College[]> => {
   try {
-    const response = await api.get('/colleges');
+    const response = await api.get("/colleges");
     return response.data;
   } catch (error) {
-    console.error('Error fetching colleges:', error);
+    console.error("Error fetching colleges:", error);
     throw error;
   }
 };
@@ -96,7 +98,7 @@ export const getCollegeById = async (id: string): Promise<College> => {
     const response = await api.get(`/colleges/${id}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching college:', error);
+    console.error("Error fetching college:", error);
     throw error;
   }
 };
@@ -113,20 +115,22 @@ export const submitAdmission = async (admissionData: {
   collegeId: string;
 }): Promise<Admission> => {
   try {
-    const response = await api.post('/admissions', admissionData);
+    const response = await api.post("/admissions", admissionData);
     return response.data;
   } catch (error) {
-    console.error('Error submitting admission:', error);
+    console.error("Error submitting admission:", error);
     throw error;
   }
 };
 
-export const getUserAdmissions = async (email: string): Promise<Admission[]> => {
+export const getUserAdmissions = async (
+  email: string
+): Promise<Admission[]> => {
   try {
     const response = await api.get(`/admissions/${email}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching user admissions:', error);
+    console.error("Error fetching user admissions:", error);
     throw error;
   }
 };
@@ -140,20 +144,20 @@ export const submitReview = async (reviewData: {
   comment: string;
 }): Promise<Review> => {
   try {
-    const response = await api.post('/reviews', reviewData);
+    const response = await api.post("/reviews", reviewData);
     return response.data;
   } catch (error) {
-    console.error('Error submitting review:', error);
+    console.error("Error submitting review:", error);
     throw error;
   }
 };
 
 export const getAllReviews = async (): Promise<Review[]> => {
   try {
-    const response = await api.get('/reviews');
+    const response = await api.get("/reviews");
     return response.data;
   } catch (error) {
-    console.error('Error fetching reviews:', error);
+    console.error("Error fetching reviews:", error);
     throw error;
   }
 };
@@ -165,23 +169,25 @@ export const getAllPapers = async (filters?: {
 }): Promise<ResearchPaper[]> => {
   try {
     const params = new URLSearchParams();
-    if (filters?.category) params.append('category', filters.category);
-    if (filters?.college) params.append('college', filters.college);
+    if (filters?.category) params.append("category", filters.category);
+    if (filters?.college) params.append("college", filters.college);
 
     const response = await api.get(`/papers?${params.toString()}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching papers:', error);
+    console.error("Error fetching papers:", error);
     throw error;
   }
 };
 
-export const getPapersByCollege = async (collegeId: string): Promise<ResearchPaper[]> => {
+export const getPapersByCollege = async (
+  collegeId: string
+): Promise<ResearchPaper[]> => {
   try {
     const response = await api.get(`/papers/college/${collegeId}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching college papers:', error);
+    console.error("Error fetching college papers:", error);
     throw error;
   }
 };
@@ -191,22 +197,26 @@ export const getPaperById = async (id: string): Promise<ResearchPaper> => {
     const response = await api.get(`/papers/${id}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching paper:', error);
+    console.error("Error fetching paper:", error);
     throw error;
   }
 };
 
 // User endpoints
-export const updateUser = async (email: string, userData: {
-  name?: string;
-  university?: string;
-  address?: string;
-}): Promise<User> => {
+export const updateUser = async (
+  email: string,
+  userData: {
+    name?: string;
+    email?: string;
+    university?: string;
+    address?: string;
+  }
+): Promise<User> => {
   try {
     const response = await api.patch(`/users/${email}`, userData);
     return response.data;
   } catch (error) {
-    console.error('Error updating user:', error);
+    console.error("Error updating user:", error);
     throw error;
   }
 };
@@ -214,7 +224,7 @@ export const updateUser = async (email: string, userData: {
 // Request interceptor for adding auth token (for future use)
 api.interceptors.request.use((config) => {
   // Add Firebase auth token if available
-  const token = localStorage.getItem('authToken');
+  const token = localStorage.getItem("authToken");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -227,7 +237,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Handle unauthorized access
-      console.error('Unauthorized access - redirecting to login');
+      console.error("Unauthorized access - redirecting to login");
       // You can add redirect logic here
     }
     return Promise.reject(error);

@@ -18,6 +18,7 @@ const Profile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [originalEmail, setOriginalEmail] = useState(user?.email || '');
   const [userData, setUserData] = useState<UserData>({
     name: user?.displayName || '',
     email: user?.email || '',
@@ -29,6 +30,7 @@ const Profile: React.FC = () => {
   useEffect(() => {
     // In a real app, you'd fetch this from your backend
     // For now, using Firebase data plus local state for additional fields
+    setOriginalEmail(user?.email || '');
     setUserData({
       name: user?.displayName || '',
       email: user?.email || '',
@@ -56,12 +58,14 @@ const Profile: React.FC = () => {
     setMessage('');
 
     try {
-      await updateUser(userData.email || '', {
+      await updateUser(originalEmail, {
         name: userData.name,
+        email: userData.email,
         university: userData.university,
         address: userData.address
       });
 
+      setOriginalEmail(userData.email || '');
       setMessage('Profile updated successfully!');
       setIsEditing(false);
     } catch {
@@ -75,7 +79,7 @@ const Profile: React.FC = () => {
     // Reset to original values
     setUserData({
       name: user?.displayName || '',
-      email: user?.email || '',
+      email: originalEmail,
       university: '',
       address: ''
     });
@@ -141,17 +145,14 @@ const Profile: React.FC = () => {
             // Edit Mode
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <FormField
-                    label="Email *"
-                    name="email"
-                    type="email"
-                    value={userData.email}
-                    onChange={handleInputChange}
-                    disabled
-                  />
-                  <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
-                </div>
+                <FormField
+                  label="Email *"
+                  name="email"
+                  type="email"
+                  value={userData.email}
+                  onChange={handleInputChange}
+                  placeholder="Enter your email"
+                />
 
                 <FormField
                   label="Name"
