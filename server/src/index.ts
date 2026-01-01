@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import mongoose from "mongoose";
 import connectDB from "./config/db";
 import collegeRoutes from "./routes/collegeRoutes";
 import admissionRoutes from "./routes/admissionRoutes";
@@ -10,9 +11,6 @@ import researchPaperRoutes from "./routes/researchPaperRoutes";
 
 // Load env
 dotenv.config();
-
-// Connect to database
-connectDB();
 
 // Create app
 const app = express();
@@ -36,7 +34,24 @@ app.get("/", (_req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-// Listen
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// Health check endpoint
+app.get("/health", (_req, res) => {
+  const dbState = mongoose.connection.readyState;
+  const isHealthy = dbState === 1 || dbState === 2;
+  res.status(isHealthy ? 200 : 503).json({
+    status: isHealthy ? "healthy" : "unhealthy",
+    db: dbState === 1 ? "connected" : dbState === 2 ? "connecting" : "disconnected",
+  });
 });
+
+// Connect to database then start server
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error("Failed to connect to database:", error);
+    process.exit(1);
+  });

@@ -17,21 +17,36 @@ const CollegeDetails: React.FC = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!id) return;
+    let isMounted = true;
+
+    if (!id) {
+      setLoading(false);
+      return;
+    }
 
     const fetchCollege = async () => {
       try {
         const data = await getCollegeById(id);
-        setCollege(data);
+        if (isMounted) {
+          setCollege(data);
+        }
       } catch (error) {
-        setError('Failed to load college details');
-        console.error('Error:', error);
+        if (isMounted) {
+          setError('Failed to load college details');
+          console.error('Error:', error);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchCollege();
+
+    return () => {
+      isMounted = false;
+    };
   }, [id]);
 
   if (loading) {

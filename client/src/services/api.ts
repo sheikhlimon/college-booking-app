@@ -1,18 +1,62 @@
 import axios from "axios";
 
+type RetryConfig = {
+  retryCount?: number;
+  maxRetries?: number;
+};
+
 // API Configuration
 const API_BASE_URL = `${
   import.meta.env.VITE_API_URL || "http://localhost:5000"
 }/api`;
 
-// Create axios instance
+const MAX_RETRIES = 3;
+const BASE_DELAY = 1000;
+
+// Create axios instance with retry logic
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     "Content-Type": "application/json",
   },
 });
+
+// Request interceptor to add retry config
+api.interceptors.request.use((config) => {
+  (config as RetryConfig).retryCount = 0;
+  (config as RetryConfig).maxRetries = MAX_RETRIES;
+  return config;
+});
+
+// Response interceptor for error handling and retry logic
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const config = error.config as RetryConfig & typeof error.config;
+
+    if (!config || error.response) {
+      return Promise.reject(error);
+    }
+
+    const retryCount = config.retryCount || 0;
+    const maxRetries = config.maxRetries || MAX_RETRIES;
+
+    if (retryCount >= maxRetries) {
+      return Promise.reject(error);
+    }
+
+    config.retryCount = retryCount + 1;
+
+    const backoffDelay = Math.min(
+      BASE_DELAY * Math.pow(2, retryCount),
+      10000
+    );
+    await new Promise((resolve) => setTimeout(resolve, backoffDelay));
+
+    return api.request(config);
+  }
+);
 
 // TypeScript interfaces based on backend models
 export interface College {

@@ -45,26 +45,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Login function
   const login = async (email: string, password: string) => {
+    setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
       console.error("Login error:", error);
       throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
   // Register function
   const register = async (email: string, password: string) => {
+    setLoading(true);
     try {
       await createUserWithEmailAndPassword(auth, email, password);
     } catch (error) {
       console.error("Registration error:", error);
       throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
   // Google login function
   const loginWithGoogle = async () => {
+    setLoading(true);
     try {
       const provider = new GoogleAuthProvider();
       provider.addScope('profile');
@@ -73,26 +80,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } catch (error) {
       console.error("Google login error:", error);
       throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
   // Logout function
   const logout = async () => {
+    setLoading(true);
     try {
       await signOut(auth);
     } catch (error) {
       console.error("Logout error:", error);
       throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
   // Password reset function
   const resetPassword = async (email: string) => {
+    setLoading(true);
     try {
       await sendPasswordResetEmail(auth, email);
     } catch (error) {
       console.error("Password reset error:", error);
       throw error;
+    } finally {
+      setLoading(false);
     }
   };
 

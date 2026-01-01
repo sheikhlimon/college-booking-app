@@ -11,7 +11,6 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [fieldErrors, setFieldErrors] = useState<{
@@ -19,7 +18,7 @@ const Register: React.FC = () => {
     password?: string;
     confirmPassword?: string;
   }>({});
-  const { register, loginWithGoogle, user } = useAuth();
+  const { register, loginWithGoogle, user, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,7 +55,6 @@ const Register: React.FC = () => {
 
     if (!validateForm()) return;
 
-    setLoading(true);
     setError('');
     setFieldErrors({});
 
@@ -74,20 +72,15 @@ const Register: React.FC = () => {
       } else {
         setError(message);
       }
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleGoogleRegister = async () => {
-    setLoading(true);
     setError('');
     try {
       await loginWithGoogle();
     } catch (error) {
       setError(error instanceof Error ? error.message : 'An error occurred');
-    } finally {
-      setLoading(false);
     }
   };
 

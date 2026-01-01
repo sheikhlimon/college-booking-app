@@ -10,11 +10,10 @@ import GoogleIconButton from '../components/shared/GoogleIconButton';
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
-  const { login, loginWithGoogle, resetPassword, user } = useAuth();
+  const { login, loginWithGoogle, resetPassword, user, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,7 +42,6 @@ const Login: React.FC = () => {
 
     if (!validateForm()) return;
 
-    setLoading(true);
     setError('');
     setFieldErrors({});
 
@@ -58,20 +56,15 @@ const Login: React.FC = () => {
       } else {
         setError(message);
       }
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
-    setLoading(true);
     setError('');
     try {
       await loginWithGoogle();
     } catch (error) {
       setError(error instanceof Error ? error.message : 'An error occurred');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -80,15 +73,12 @@ const Login: React.FC = () => {
       setError('Please enter your email address first');
       return;
     }
-    setLoading(true);
     setError('');
     try {
       await resetPassword(email);
       setSuccess('Password reset email sent! Check your inbox.');
     } catch (error) {
       setError(error instanceof Error ? error.message : 'An error occurred');
-    } finally {
-      setLoading(false);
     }
   };
 

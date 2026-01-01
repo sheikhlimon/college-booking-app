@@ -19,6 +19,8 @@ const MyCollege: React.FC = () => {
   const [userAdmissions, setUserAdmissions] = useState<Admission[]>([]);
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchData = async () => {
       setDataLoading(true);
       try {
@@ -26,6 +28,9 @@ const MyCollege: React.FC = () => {
           getColleges(),
           user?.email ? getUserAdmissions(user.email) : Promise.resolve([])
         ]);
+
+        if (!isMounted) return;
+
         setColleges(collegesData);
         setUserAdmissions(admissionsData);
 
@@ -41,12 +46,18 @@ const MyCollege: React.FC = () => {
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
-        setDataLoading(false);
-        setLoading(false);
+        if (isMounted) {
+          setDataLoading(false);
+          setLoading(false);
+        }
       }
     };
 
     fetchData();
+
+    return () => {
+      isMounted = false;
+    };
   }, [user?.email]);
 
   const handleReviewSubmit = async (data: { collegeId: string; rating: number; comment: string }) => {

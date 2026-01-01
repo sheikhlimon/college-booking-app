@@ -18,35 +18,51 @@ const Admission: React.FC = () => {
   const [collegesLoading, setCollegesLoading] = useState(true);
 
   useEffect(() => {
-    fetchColleges();
+    let isMounted = true;
 
-    // If college is pre-selected via URL parameter, set it
-    const collegeId = searchParams.get('college');
-    if (collegeId) {
-      fetchCollegeById(collegeId);
-    }
+    const fetchData = async () => {
+      await fetchColleges(isMounted);
+
+      // If college is pre-selected via URL parameter, set it
+      const collegeId = searchParams.get('college');
+      if (collegeId) {
+        await fetchCollegeById(collegeId, isMounted);
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+    };
   }, [searchParams]);
 
-  const fetchColleges = async () => {
+  const fetchColleges = async (isMounted: boolean) => {
     try {
       const data = await getColleges();
-      setColleges(data);
-      setCollegesLoading(false);
+      if (isMounted) {
+        setColleges(data);
+        setCollegesLoading(false);
+      }
     } catch {
-      setError('Failed to load colleges');
-      setCollegesLoading(false);
+      if (isMounted) {
+        setError('Failed to load colleges');
+        setCollegesLoading(false);
+      }
     }
   };
 
-  const fetchCollegeById = async (collegeId: string) => {
+  const fetchCollegeById = async (collegeId: string, isMounted: boolean) => {
     try {
       const data = await getColleges();
       const college = data.find(c => c._id === collegeId);
-      if (college) {
+      if (college && isMounted) {
         setSelectedCollege(college);
       }
     } catch {
-      setError('Failed to load college');
+      if (isMounted) {
+        setError('Failed to load college');
+      }
     }
   };
 
