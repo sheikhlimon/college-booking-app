@@ -23,6 +23,8 @@ const FormField: React.FC<FormFieldProps> = ({
   disabled = false,
   error
 }) => {
+  console.log(`FormField ${name} render, error:`, error);
+
   return (
     <div className={className}>
       <label className="block text-sm font-medium text-gray-700 mb-2">
