@@ -62,16 +62,11 @@ const Register: React.FC = () => {
       await register(email, password);
       setSuccess('Registration successful! Redirecting...');
     } catch (error) {
-      console.log('Register.tsx caught error:', error);
-      console.log('Error code:', (error as { code?: string })?.code);
-      console.log('Error keys:', Object.keys(error as object));
-
       const errorCode = (error as { code?: string })?.code || '';
       const errorMessage = (error as Error).message || 'An error occurred';
 
       if (errorCode === 'auth/email-already-in-use') {
         setFieldErrors({ email: 'An account with this email already exists' });
-        console.log('Set field error for email');
       } else if (errorCode === 'auth/weak-password') {
         setFieldErrors({ password: 'Password is too weak (min 6 characters)' });
       } else if (errorCode === 'auth/invalid-email') {

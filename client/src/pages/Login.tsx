@@ -20,10 +20,6 @@ const Login: React.FC = () => {
     if (user) navigate('/');
   }, [user, navigate]);
 
-  useEffect(() => {
-    console.log('fieldErrors changed:', fieldErrors);
-  }, [fieldErrors]);
-
   const validateForm = () => {
     const errors: { email?: string; password?: string } = {};
 
@@ -46,23 +42,18 @@ const Login: React.FC = () => {
 
     if (!validateForm()) return;
 
+    // Only clear errors on new submission, not after auth completes
     setError('');
     setFieldErrors({});
 
     try {
       await login(email, password);
     } catch (error) {
-      console.log('Login.tsx caught error:', error);
-      console.log('Error code:', (error as { code?: string })?.code);
-      console.log('Error keys:', Object.keys(error as object));
-
       const errorCode = (error as { code?: string })?.code || '';
       const errorMessage = (error as Error).message || 'An error occurred';
 
       if (errorCode === 'auth/invalid-credential' || errorCode === 'auth/wrong-password') {
-        console.log('About to set field error for password');
         setFieldErrors({ password: 'Invalid email or password' });
-        console.log('Set field error for password, current fieldErrors:', { password: 'Invalid email or password' });
       } else if (errorCode === 'auth/user-not-found') {
         setFieldErrors({ email: 'No account found with this email' });
       } else if (errorCode === 'auth/invalid-email') {

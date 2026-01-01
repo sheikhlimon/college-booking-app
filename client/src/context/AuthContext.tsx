@@ -31,12 +31,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [initialLoad, setInitialLoad] = useState(true);
 
   // Check if user is logged in on component mount
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
       setUser(firebaseUser);
       setLoading(false);
+      setInitialLoad(false);
     });
 
     // Cleanup when component unmounts
@@ -121,7 +123,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     resetPassword,
   };
 
-  if (loading) {
+  if (initialLoad) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <LoadingSpinner size="lg" />
