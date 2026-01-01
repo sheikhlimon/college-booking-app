@@ -37,21 +37,21 @@ const PORT = process.env.PORT || 5000;
 // Health check endpoint
 app.get("/health", (_req, res) => {
   const dbState = mongoose.connection.readyState;
-  const isHealthy = dbState === 1 || dbState === 2;
-  res.status(isHealthy ? 200 : 503).json({
-    status: isHealthy ? "healthy" : "unhealthy",
-    db: dbState === 1 ? "connected" : dbState === 2 ? "connecting" : "disconnected",
-  });
+  const status = dbState === 1 ? "connected" : "disconnected";
+  res.json({ status });
 });
 
 // Connect to database then start server
-connectDB()
-  .then(() => {
+const startServer = async () => {
+  try {
+    await connectDB();
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
-  })
-  .catch((error) => {
-    console.error("Failed to connect to database:", error);
+  } catch (error) {
+    console.error("Failed to start server:", error);
     process.exit(1);
-  });
+  }
+};
+
+startServer();
