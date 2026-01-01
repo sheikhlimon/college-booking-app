@@ -48,11 +48,16 @@ const Login: React.FC = () => {
     try {
       await login(email, password);
     } catch (error) {
+      console.log('Login.tsx caught error:', error);
+      console.log('Error code:', (error as { code?: string })?.code);
+      console.log('Error keys:', Object.keys(error as object));
+
       const errorCode = (error as { code?: string })?.code || '';
       const errorMessage = (error as Error).message || 'An error occurred';
 
       if (errorCode === 'auth/invalid-credential' || errorCode === 'auth/wrong-password') {
         setFieldErrors({ password: 'Invalid email or password' });
+        console.log('Set field error for password');
       } else if (errorCode === 'auth/user-not-found') {
         setFieldErrors({ email: 'No account found with this email' });
       } else if (errorCode === 'auth/invalid-email') {
