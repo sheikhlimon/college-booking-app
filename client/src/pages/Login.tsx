@@ -48,13 +48,21 @@ const Login: React.FC = () => {
     try {
       await login(email, password);
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'An error occurred';
-      if (message.includes('invalid-credential') || message.includes('wrong')) {
+      const errorCode = (error as { code?: string })?.code || '';
+      const errorMessage = (error as Error).message || 'An error occurred';
+
+      if (errorCode === 'auth/invalid-credential' || errorCode === 'auth/wrong-password') {
         setFieldErrors({ password: 'Invalid email or password' });
-      } else if (message.includes('user-not-found')) {
+      } else if (errorCode === 'auth/user-not-found') {
         setFieldErrors({ email: 'No account found with this email' });
+      } else if (errorCode === 'auth/invalid-email') {
+        setFieldErrors({ email: 'Invalid email address' });
+      } else if (errorCode === 'auth/user-disabled') {
+        setError('This account has been disabled');
+      } else if (errorCode === 'auth/too-many-requests') {
+        setError('Too many failed attempts. Please try again later');
       } else {
-        setError(message);
+        setError(errorMessage);
       }
     }
   };
@@ -64,7 +72,18 @@ const Login: React.FC = () => {
     try {
       await loginWithGoogle();
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'An error occurred');
+      const errorCode = (error as { code?: string })?.code || '';
+      const errorMessage = (error as Error).message || 'An error occurred';
+
+      if (errorCode === 'auth/popup-closed-by-user') {
+        setError('Google sign-in was cancelled');
+      } else if (errorCode === 'auth/popup-blocked') {
+        setError('Pop-up was blocked. Please allow pop-ups and try again');
+      } else if (errorCode === 'auth/account-exists-with-different-credential') {
+        setError('An account with this email already exists. Please sign in with password');
+      } else {
+        setError(errorMessage);
+      }
     }
   };
 
@@ -78,7 +97,18 @@ const Login: React.FC = () => {
       await resetPassword(email);
       setSuccess('Password reset email sent! Check your inbox.');
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'An error occurred');
+      const errorCode = (error as { code?: string })?.code || '';
+      const errorMessage = (error as Error).message || 'An error occurred';
+
+      if (errorCode === 'auth/user-not-found') {
+        setError('No account found with this email');
+      } else if (errorCode === 'auth/invalid-email') {
+        setError('Invalid email address');
+      } else if (errorCode === 'auth/too-many-requests') {
+        setError('Too many requests. Please try again later');
+      } else {
+        setError(errorMessage);
+      }
     }
   };
 

@@ -62,15 +62,19 @@ const Register: React.FC = () => {
       await register(email, password);
       setSuccess('Registration successful! Redirecting...');
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'An error occurred';
-      if (message.includes('email-already-in-use')) {
+      const errorCode = (error as { code?: string })?.code || '';
+      const errorMessage = (error as Error).message || 'An error occurred';
+
+      if (errorCode === 'auth/email-already-in-use') {
         setFieldErrors({ email: 'An account with this email already exists' });
-      } else if (message.includes('weak-password')) {
-        setFieldErrors({ password: 'Password is too weak' });
-      } else if (message.includes('invalid-email')) {
+      } else if (errorCode === 'auth/weak-password') {
+        setFieldErrors({ password: 'Password is too weak (min 6 characters)' });
+      } else if (errorCode === 'auth/invalid-email') {
         setFieldErrors({ email: 'Invalid email address' });
+      } else if (errorCode === 'auth/operation-not-allowed') {
+        setError('Email/password accounts are not enabled');
       } else {
-        setError(message);
+        setError(errorMessage);
       }
     }
   };
@@ -80,7 +84,18 @@ const Register: React.FC = () => {
     try {
       await loginWithGoogle();
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'An error occurred');
+      const errorCode = (error as { code?: string })?.code || '';
+      const errorMessage = (error as Error).message || 'An error occurred';
+
+      if (errorCode === 'auth/popup-closed-by-user') {
+        setError('Google sign-in was cancelled');
+      } else if (errorCode === 'auth/popup-blocked') {
+        setError('Pop-up was blocked. Please allow pop-ups and try again');
+      } else if (errorCode === 'auth/account-exists-with-different-credential') {
+        setError('An account with this email already exists. Please sign in with password');
+      } else {
+        setError(errorMessage);
+      }
     }
   };
 
