@@ -16,7 +16,7 @@ const BASE_DELAY = 1000;
 // Create axios instance with retry logic
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000,
+  timeout: 60000, // Increased to 60s for cold starts
   headers: {
     "Content-Type": "application/json",
   },
@@ -35,7 +35,16 @@ api.interceptors.response.use(
   async (error) => {
     const config = error.config as RetryConfig & typeof error.config;
 
-    if (!config || error.response) {
+    if (!config) {
+      return Promise.reject(error);
+    }
+
+    // Retry on network errors, timeouts, or 5xx server errors (including cold starts)
+    const shouldRetry =
+      !error.response || // Network error or timeout
+      error.response.status >= 500; // Server error (503 during cold start)
+
+    if (!shouldRetry) {
       return Promise.reject(error);
     }
 
@@ -48,9 +57,10 @@ api.interceptors.response.use(
 
     config.retryCount = retryCount + 1;
 
+    // Exponential backoff: 2s, 4s, 8s for cold starts
     const backoffDelay = Math.min(
-      BASE_DELAY * Math.pow(2, retryCount),
-      10000
+      BASE_DELAY * Math.pow(2, retryCount) * 2,
+      15000
     );
     await new Promise((resolve) => setTimeout(resolve, backoffDelay));
 
