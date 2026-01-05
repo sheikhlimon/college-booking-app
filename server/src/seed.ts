@@ -139,23 +139,23 @@ const seedColleges = async () => {
       },
       {
         collegeId: techInstitute!._id,
-        title: "Quantum Computing: Breaking Modern Cryptography",
-        authors: ["Dr. James Wilson", "Dr. Emily Zhang"],
-        abstract: "An analysis of quantum computing's potential impact on current cryptographic systems and proposed post-quantum solutions.",
-        link: "https://arxiv.org/abs/2401.67890",
+        title: "Securing Digital Communication in the Quantum Era",
+        authors: ["Dr. G.S. Mamatha"],
+        abstract: "Delineates vulnerabilities of classical cryptographic systems to quantum attacks, elucidates principles of quantum computing, and introduces post-quantum cryptographic solutions.",
+        link: "https://arxiv.org/abs/2403.11741",
         category: "Quantum Computing",
-        publishDate: new Date("2024-01-20"),
-        citations: 78
+        publishDate: new Date("2024-03-15"),
+        citations: 86
       },
       {
         collegeId: businessSchool!._id,
-        title: "Sustainable Business Models in the Digital Age",
-        authors: ["Prof. Linda Martinez", "Dr. David Kim"],
-        abstract: "Examining how digital transformation enables sustainable business practices and long-term value creation.",
-        link: "https://doi.org/10.1177/12345678901234",
+        title: "Digital transformation as the driving force for sustainable business performance",
+        authors: ["Dr. A. Chen"],
+        abstract: "Investigates the intricate dynamics between digital capabilities and digitalization strategies and their impact on sustainable business performance.",
+        link: "https://www.sciencedirect.com/science/article/pii/S2405844024055403",
         category: "Business Strategy",
         publishDate: new Date("2024-02-10"),
-        citations: 32
+        citations: 96
       }
     ];
 
