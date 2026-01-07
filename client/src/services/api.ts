@@ -22,10 +22,17 @@ const api = axios.create({
   },
 });
 
-// Request interceptor to add retry config
+// Request interceptor to add retry config and auth token
 api.interceptors.request.use((config) => {
   (config as RetryConfig).retryCount = 0;
   (config as RetryConfig).maxRetries = MAX_RETRIES;
+
+  // Add Firebase auth token if available
+  const token = localStorage.getItem("authToken");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
   return config;
 });
 
@@ -257,6 +264,20 @@ export const getPaperById = async (id: string): Promise<ResearchPaper> => {
 };
 
 // User endpoints
+export const getUserByEmail = async (email: string): Promise<User | null> => {
+  try {
+    const response = await api.get(`/users/${email}`);
+    return response.data;
+  } catch (error) {
+    // Return null if user not found (404), throw for other errors
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      return null;
+    }
+    console.error("Error fetching user:", error);
+    throw error;
+  }
+};
+
 export const updateUser = async (
   email: string,
   userData: {
@@ -274,28 +295,5 @@ export const updateUser = async (
     throw error;
   }
 };
-
-// Request interceptor for adding auth token (for future use)
-api.interceptors.request.use((config) => {
-  // Add Firebase auth token if available
-  const token = localStorage.getItem("authToken");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-// Response interceptor for error handling
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      // Handle unauthorized access
-      console.error("Unauthorized access - redirecting to login");
-      // You can add redirect logic here
-    }
-    return Promise.reject(error);
-  }
-);
 
 export default api;
