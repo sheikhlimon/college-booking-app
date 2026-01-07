@@ -1,9 +1,15 @@
-import { Router } from 'express';
-import { updateUserByEmail } from '../controllers/userController';
+import { Router } from "express";
+import {
+  getUserByEmail,
+  updateUserByEmail,
+} from "../controllers/userController";
 
 const router = Router();
 
-// PATCH /users/:email - Update user by email
-router.patch('/:email', updateUserByEmail);
+// GET /users/:email - Get user by email
+router.get("/:email", getUserByEmail);
+
+// PATCH /users/:email - Update user by email (creates if not exists)
+router.patch("/:email", updateUserByEmail);
 
 export default router;
