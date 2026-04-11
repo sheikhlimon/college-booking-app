@@ -1,4 +1,4 @@
-import * as admin from 'firebase-admin';
+import admin from 'firebase-admin';
 
 // Prevent re-initialization in dev (nodemon hot reloads)
 if (!admin.apps.length) {
