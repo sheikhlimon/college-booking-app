@@ -35,8 +35,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Check if user is logged in on component mount
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
+    const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
       setUser(firebaseUser);
+
+      if (firebaseUser) {
+        // Get Firebase ID token and store it for API requests
+        const token = await firebaseUser.getIdToken();
+        localStorage.setItem("authToken", token);
+      } else {
+        localStorage.removeItem("authToken");
+      }
+
       setLoading(false);
       setInitialLoad(false);
     });

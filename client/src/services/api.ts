@@ -1,4 +1,5 @@
 import axios from "axios";
+import { auth } from "../firebase/config";
 
 type RetryConfig = {
   retryCount?: number;
@@ -44,6 +45,23 @@ api.interceptors.response.use(
 
     if (!config) {
       return Promise.reject(error);
+    }
+
+    // Handle 401 — try refreshing the Firebase token and retry once
+    if (error.response?.status === 401 && !config._tokenRefreshed) {
+      const user = auth.currentUser;
+      if (user) {
+        try {
+          const freshToken = await user.getIdToken(true);
+          localStorage.setItem("authToken", freshToken);
+          config.headers.Authorization = `Bearer ${freshToken}`;
+          (config as any)._tokenRefreshed = true;
+          return api.request(config);
+        } catch {
+          // Token refresh failed — user needs to re-login
+          return Promise.reject(error);
+        }
+      }
     }
 
     // Retry on network errors, timeouts, or 5xx server errors (including cold starts)
