@@ -8,7 +8,7 @@ Discover, compare, and apply to colleges with ease. Search for colleges, view de
 - **College Details**: View detailed information including admission dates, events, research works, and sports facilities
 - **Admission System**: Submit online applications to multiple colleges
 - **Reviews & Ratings**: Add and read reviews for colleges
-- **User Authentication**: Sign up with email/password or Google
+- **User Authentication**: Firebase Auth with server-side token verification (Email/Password, Google OAuth)
 - **Profile Management**: Edit your profile information
 
 ## Tech Stack
@@ -34,8 +34,9 @@ college-booking-app/
 │   └── index.html
 └── server/             # Backend (Express + MongoDB)
     └── src/
-        ├── config/     # Database config
+        ├── config/     # Database & Firebase config
         ├── controllers/# Route controllers
+        ├── middleware/  # Auth middleware
         ├── models/     # Mongoose models
         ├── routes/     # API routes
         └── index.ts    # Entry point
@@ -71,6 +72,9 @@ VITE_API_URL=http://localhost:5000
 **Server (.env)**:
 ```
 MONGODB_URI=your_mongodb_connection_string
+FIREBASE_PROJECT_ID=your_project_id
+FIREBASE_CLIENT_EMAIL=your_client_email@project.iam.gserviceaccount.com
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
 ```
 
 4. Start the application:
