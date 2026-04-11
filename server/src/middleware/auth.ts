@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import admin from '../config/firebase';
+import admin, { isFirebaseInitialized } from '../config/firebase';
 
 // Used by controllers to access the authenticated user's identity
 export interface AuthRequest extends Request {
@@ -14,6 +14,11 @@ export const authMiddleware = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
+  if (!isFirebaseInitialized()) {
+    res.status(503).json({ message: 'Authentication not configured on server' });
+    return;
+  }
+
   try {
     const authHeader = req.headers.authorization;
 
