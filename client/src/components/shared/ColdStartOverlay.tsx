@@ -14,7 +14,7 @@ const ColdStartOverlay: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm animate-[fadeIn_200ms_ease-out]" onMouseDown={dismiss}>
-      <div className="bg-white rounded-2xl shadow-2xl px-10 py-8 flex flex-col items-center gap-4 max-w-xs w-full mx-4" onMouseDown={(e) => e.stopPropagation()}>
+      <div className="bg-white rounded-2xl shadow-2xl px-10 py-8 flex flex-col items-center gap-4 max-w-xs w-full mx-4 pointer-events-none">
         <p className="text-emerald-800 font-semibold text-lg">Waking up the server...</p>
 
         <div className="relative w-32 h-32">
