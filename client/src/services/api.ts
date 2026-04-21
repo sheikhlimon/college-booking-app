@@ -15,44 +15,28 @@ const MAX_RETRIES = 3;
 const BASE_DELAY = 1000;
 const COLD_START_THRESHOLD = 3000;
 
-// Cold start banner — shows a banner when the server takes too long to respond
-let pendingRequests = 0;
-let bannerTimer: ReturnType<typeof setTimeout> | null = null;
-
-const showColdStartBanner = () => {
-  let banner = document.getElementById("cold-start-banner");
-  if (!banner) {
-    banner = document.createElement("div");
-    banner.id = "cold-start-banner";
-    banner.style.cssText = `
-      position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
-      background: #065f46; color: white; text-align: center;
-      padding: 10px 16px; font-size: 14px; font-family: system-ui, sans-serif;
-      transform: translateY(-100%); transition: transform 0.3s ease;
-    `;
-    banner.textContent = "Server is waking up — this may take a moment...";
-    document.body.appendChild(banner);
-  }
-  // Trigger slide-in after a frame so the CSS transition works
-  requestAnimationFrame(() => {
-    banner!.style.transform = "translateY(0)";
-  });
+// Cold start overlay — bridge between axios interceptors and React context
+type ColdStartCallbacks = {
+  start: () => void;
+  stop: () => void;
 };
 
-const hideColdStartBanner = () => {
-  const banner = document.getElementById("cold-start-banner");
-  if (banner) {
-    banner.style.transform = "translateY(-100%)";
-    setTimeout(() => banner.remove(), 300);
-  }
+let coldStartCallbacks: ColdStartCallbacks | null = null;
+let pendingRequests = 0;
+let coldStartTimer: ReturnType<typeof setTimeout> | null = null;
+
+export const registerColdStartCallbacks = (cb: ColdStartCallbacks) => {
+  coldStartCallbacks = cb;
 };
 
 const trackRequestStart = () => {
   pendingRequests++;
-  if (!bannerTimer) {
-    bannerTimer = setTimeout(() => {
-      if (pendingRequests > 0) showColdStartBanner();
-      bannerTimer = null;
+  if (!coldStartTimer) {
+    coldStartTimer = setTimeout(() => {
+      if (pendingRequests > 0 && coldStartCallbacks) {
+        coldStartCallbacks.start();
+      }
+      coldStartTimer = null;
     }, COLD_START_THRESHOLD);
   }
 };
@@ -60,11 +44,11 @@ const trackRequestStart = () => {
 const trackRequestEnd = () => {
   pendingRequests = Math.max(0, pendingRequests - 1);
   if (pendingRequests === 0) {
-    if (bannerTimer) {
-      clearTimeout(bannerTimer);
-      bannerTimer = null;
+    if (coldStartTimer) {
+      clearTimeout(coldStartTimer);
+      coldStartTimer = null;
     }
-    hideColdStartBanner();
+    coldStartCallbacks?.stop();
   }
 };
 
