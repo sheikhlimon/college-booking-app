@@ -1,19 +1,15 @@
 import axios from "axios";
 import { auth } from "../firebase/config";
 
-type RetryConfig = {
-  retryCount?: number;
-  maxRetries?: number;
-};
-
 // API Configuration
 const API_BASE_URL = `${
   import.meta.env.VITE_API_URL || "http://localhost:5000"
 }/api`;
+const HEALTH_CHECK_URL = API_BASE_URL.replace(/\/api$/, "") + "/health";
 
-const MAX_RETRIES = 3;
-const BASE_DELAY = 1000;
 const COLD_START_THRESHOLD = 3000;
+const HEALTH_POLL_INTERVAL = 3000;
+const HEALTH_POLL_TIMEOUT = 60000;
 
 // Cold start overlay — bridge between axios interceptors and React context
 type ColdStartCallbacks = {
@@ -24,6 +20,7 @@ type ColdStartCallbacks = {
 let coldStartCallbacks: ColdStartCallbacks | null = null;
 let pendingRequests = 0;
 let coldStartTimer: ReturnType<typeof setTimeout> | null = null;
+let healthPollInProgress = false;
 
 export const registerColdStartCallbacks = (cb: ColdStartCallbacks) => {
   coldStartCallbacks = cb;
@@ -52,22 +49,61 @@ const trackRequestEnd = () => {
   }
 };
 
-// Create axios instance with retry logic
+// Poll /health until the server responds or timeout is reached
+const waitForServer = (): Promise<void> => {
+  if (healthPollInProgress) {
+    // Another request is already polling — just wait for it
+    return new Promise((resolve, reject) => {
+      const check = setInterval(() => {
+        if (!healthPollInProgress) {
+          clearInterval(check);
+          resolve();
+        }
+      }, 500);
+      setTimeout(() => {
+        clearInterval(check);
+        reject(new Error("Server wake-up timed out while waiting for existing poll"));
+      }, HEALTH_POLL_TIMEOUT);
+    });
+  }
+
+  healthPollInProgress = true;
+  const start = Date.now();
+
+  return new Promise((resolve, reject) => {
+    const poll = async () => {
+      if (Date.now() - start >= HEALTH_POLL_TIMEOUT) {
+        healthPollInProgress = false;
+        reject(new Error("Server wake-up timed out"));
+        return;
+      }
+
+      try {
+        await axios.get(HEALTH_CHECK_URL, { timeout: 5000 });
+        healthPollInProgress = false;
+        resolve();
+      } catch {
+        setTimeout(poll, HEALTH_POLL_INTERVAL);
+      }
+    };
+
+    poll();
+  });
+};
+
+// Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 60000, // Increased to 60s for cold starts
+  timeout: 60000,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Request interceptor to add retry config and auth token
+// Request interceptor — add auth token
 api.interceptors.request.use((config) => {
-  (config as RetryConfig).retryCount = 0;
-  (config as RetryConfig).maxRetries = MAX_RETRIES;
   trackRequestStart();
 
-  // Add Firebase auth token if available
   const token = localStorage.getItem("authToken");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -76,7 +112,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Response interceptor for error handling and retry logic
+// Response interceptor — token refresh + health-poll retry for cold starts
 api.interceptors.response.use(
   (response) => {
     trackRequestEnd();
@@ -84,14 +120,14 @@ api.interceptors.response.use(
   },
   async (error) => {
     trackRequestEnd();
-    const config = error.config as RetryConfig & typeof error.config;
+    const config = error.config;
 
     if (!config) {
       return Promise.reject(error);
     }
 
     // Handle 401 — try refreshing the Firebase token and retry once
-    if (error.response?.status === 401 && !config._tokenRefreshed) {
+    if (error.response?.status === 401 && !(config as any)._tokenRefreshed) {
       const user = auth.currentUser;
       if (user) {
         try {
@@ -101,38 +137,29 @@ api.interceptors.response.use(
           (config as any)._tokenRefreshed = true;
           return api.request(config);
         } catch {
-          // Token refresh failed — user needs to re-login
           return Promise.reject(error);
         }
       }
     }
 
-    // Retry on network errors, timeouts, or 5xx server errors (including cold starts)
+    // Only health-poll retry on network errors or 5xx (server sleeping / cold start)
     const shouldRetry =
-      !error.response || // Network error or timeout
-      error.response.status >= 500; // Server error (503 during cold start)
+      !error.response || error.response.status >= 500;
 
-    if (!shouldRetry) {
+    if (!shouldRetry || (config as any)._healthPolled) {
       return Promise.reject(error);
     }
 
-    const retryCount = config.retryCount || 0;
-    const maxRetries = config.maxRetries || MAX_RETRIES;
+    // Mark so we don't re-enter the health poll loop on the retry
+    (config as any)._healthPolled = true;
 
-    if (retryCount >= maxRetries) {
+    try {
+      await waitForServer();
+      trackRequestStart();
+      return api.request(config);
+    } catch {
       return Promise.reject(error);
     }
-
-    config.retryCount = retryCount + 1;
-
-    // Exponential backoff: 2s, 4s, 8s for cold starts
-    const backoffDelay = Math.min(
-      BASE_DELAY * Math.pow(2, retryCount) * 2,
-      15000
-    );
-    await new Promise((resolve) => setTimeout(resolve, backoffDelay));
-
-    return api.request(config);
   }
 );
 
