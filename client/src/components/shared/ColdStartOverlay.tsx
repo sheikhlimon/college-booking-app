@@ -12,7 +12,7 @@ const RING_RADIUS = 52;
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 
 const ColdStartOverlay: React.FC = () => {
-  const { isVisible, elapsed } = useColdStart();
+  const { isVisible, elapsed, dismiss } = useColdStart();
 
   if (!isVisible) return null;
 
@@ -21,8 +21,8 @@ const ColdStartOverlay: React.FC = () => {
   const offset = RING_CIRCUMFERENCE * (1 - progress);
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm animate-[fadeIn_200ms_ease-out]">
-      <div className="bg-white rounded-2xl shadow-2xl px-10 py-8 flex flex-col items-center gap-4 max-w-xs w-full mx-4">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm animate-[fadeIn_200ms_ease-out]" onMouseDown={dismiss}>
+      <div className="bg-white rounded-2xl shadow-2xl px-10 py-8 flex flex-col items-center gap-4 max-w-xs w-full mx-4" onMouseDown={(e) => e.stopPropagation()}>
         <p className="text-emerald-800 font-semibold text-lg">{phase.text}</p>
 
         <div className="relative w-32 h-32">

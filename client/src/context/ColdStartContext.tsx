@@ -8,6 +8,7 @@ interface ColdStartState {
 interface ColdStartContextType extends ColdStartState {
   start: () => void;
   stop: () => void;
+  dismiss: () => void;
 }
 
 const ColdStartContext = createContext<ColdStartContextType>({
@@ -15,6 +16,7 @@ const ColdStartContext = createContext<ColdStartContextType>({
   elapsed: 0,
   start: () => {},
   stop: () => {},
+  dismiss: () => {},
 });
 
 export const useColdStart = () => useContext(ColdStartContext);
@@ -23,6 +25,7 @@ export const ColdStartProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const pendingRef = useRef(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -47,6 +50,7 @@ export const ColdStartProvider: React.FC<{ children: React.ReactNode }> = ({
   const start = useCallback(() => {
     pendingRef.current++;
     if (pendingRef.current === 1) {
+      setDismissed(false);
       startTimer();
       setIsVisible(true);
     }
@@ -56,12 +60,18 @@ export const ColdStartProvider: React.FC<{ children: React.ReactNode }> = ({
     pendingRef.current = Math.max(0, pendingRef.current - 1);
     if (pendingRef.current === 0) {
       setIsVisible(false);
+      setDismissed(false);
       stopTimer();
     }
   }, [stopTimer]);
 
+  const dismiss = useCallback(() => {
+    setDismissed(true);
+    stopTimer();
+  }, [stopTimer]);
+
   return (
-    <ColdStartContext.Provider value={{ isVisible, elapsed, start, stop }}>
+    <ColdStartContext.Provider value={{ isVisible: isVisible && !dismissed, elapsed, start, stop, dismiss }}>
       {children}
     </ColdStartContext.Provider>
   );
