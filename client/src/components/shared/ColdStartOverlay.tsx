@@ -56,6 +56,7 @@ const ColdStartOverlay: React.FC = () => {
         </div>
 
         <p className="text-gray-400 text-sm">Your content will appear shortly</p>
+        <p className="text-gray-300 text-xs cursor-default">Click anywhere to dismiss</p>
       </div>
     </div>
   );
